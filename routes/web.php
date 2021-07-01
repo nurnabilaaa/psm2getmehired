@@ -50,7 +50,7 @@ route::view('/waiting','waiting' );
 route::view('/update','update' );
 route::view('/dashboard','dashboard' );
 route::view('/result','result');
-
+route::view('/category','category');
 
 // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/user', 'UserController@index')->name('user');
