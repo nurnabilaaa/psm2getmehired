@@ -52,6 +52,7 @@ route::view('/dashboard','dashboard' );
 route::view('/result','result');
 route::view('/category','category');
 
+route::view('/admin','admin');
 // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/user', 'UserController@index')->name('user');
 // Route::get('/admin', 'AdminController@index')->name('admin');
