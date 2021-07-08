@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\UploadController;
-
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +15,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route that sends back a view
+Route::get('/', function () {
+    return view('home');
+});
+
+// //Route to users - string
+// Route::get('/users', function () {
+//     return 'Welcome to Users Page!';
+// });
+
+// //Route to users - function
+// Route::get('/users', function () {
+//     return redirect('/');
+// });
+
+// Controller
+//Laravel 8 (New)
+//Route::get('/users', [UsersController::class, 'index']);
+//Route::get('/users/about', [UsersController::class, 'about']);
+
+//Laravel 8 (Also New)
+//Route::get('/users', 'App\Http\Controllers\ProductsController@index');   
+
+
+
+
 Route::get('/new-login', function () {
     return view('newLogin');
 });
@@ -25,10 +51,6 @@ Route::get('/new-register', function () {
 
 Route::get('/new-forget', function () {
     return view('newForget');
-});
-
-Route::get('/', function () {
-    return view('welcome');
 });
 
 Auth::routes();
@@ -53,6 +75,7 @@ route::view('/result','result');
 route::view('/category','category');
 
 route::view('/admin','admin');
+route::view('/consultant','consultant');
 // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/user', 'UserController@index')->name('user');
 // Route::get('/admin', 'AdminController@index')->name('admin');
