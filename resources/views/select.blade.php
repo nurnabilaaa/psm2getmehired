@@ -29,7 +29,6 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-    
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
@@ -41,7 +40,6 @@
                 <a href="/home" class="nav-link">Home</a>
             </li>
         </ul>
-        
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- Messages Dropdown Menu -->
@@ -137,13 +135,10 @@
         </ul>
     </nav>
     <!-- /.navbar -->
-    
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        
         <!-- Sidebar -->
         <div class="sidebar">
-            
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -193,15 +188,12 @@
         </div>
         <!-- /.sidebar -->
     </aside>
-    
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header"></div>
         <!-- /.content-header -->
-        
         <!-- Main content -->
-        
         <div class="row mt px-5">
             <div class="col-md-6">
                 <div class="card shadow">
@@ -234,7 +226,6 @@
                 </div>
             </div>
         </div>
-    
     </div>
     <footer class="main-footer">
         <strong>Copyright &copy; 2020-2021 <a href="#">GetMeHired</a>.</strong>
@@ -243,7 +234,6 @@
             <b>Version</b> 1.0.0
         </div>
     </footer>
-    
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
@@ -251,7 +241,6 @@
     <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="{{asset('adminlte-v3/')}}/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

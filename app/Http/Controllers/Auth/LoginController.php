@@ -18,7 +18,6 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
-
     use AuthenticatesUsers;
 
     /**
@@ -36,13 +35,11 @@ class LoginController extends Controller
      *
      * @var string
      */
-
     protected function authenticated(Request $request, $user)
     {
         if ($user - hasRole('superadministrator')) {
             return redirect('/admin');
         }
-
         if ($user->hasRole('user')) {
             return redirect('/user');
         }
