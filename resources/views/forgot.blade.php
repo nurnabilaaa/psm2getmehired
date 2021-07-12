@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>GetMe Hired - Login</title>
+    <title>SB Admin 2 - Forgot Password</title>
     
     <!-- Custom fonts for this template-->
     <link href="{{ asset('/customAuth/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -35,16 +35,15 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-"></div>
+                        <div class="col-lg-6 d-none d-lg-block bg-password-"></div>
                         <div class="col-lg-6">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">You have successfully register!</h1>
+                                    <h1 class="h4 text-gray-900 mb-2">Forgot Your Password?</h1>
+                                    <p class="mb-4">We get it, stuff happens. Just enter your email address below
+                                        and we'll send you a link to reset your password!</p>
                                 </div>
-                                <div class="text-center">
-                                    <h4 class="h6 text-gray-900 mb-4">Login to your account now.</h4>
-                                </div>
-                                <form method="POST" class="user" action="{{ url('login') }}">
+                                <form method="POST" class="user" action="{{ url('password.email') }}">
                                     @csrf
                                     <div class="form-group">
                                         <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email"
@@ -55,34 +54,16 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror" name="password" required
-                                               autocomplete="current-password" placeholder="Password">
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input class="form-check-input custom-control-user" type="checkbox" name="remember"
-                                                   id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <label class="custom-control-label" for="customCheck">Remember Me</label>
-                                        </div>
-                                    </div>
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        {{ __('Login') }}
+                                        {{ __('Send Password Reset Link') }}
                                     </button>
-                                    <hr>
-                                
                                 </form>
                                 <hr>
-                            <!-- <div class="text-center">
-                                        <a class="small" href="{{ url('password.request') }}">Forgot Password?</a>
-                                    </div> -->
                                 <div class="text-center">
-                                    <a class="small" href="/register">Create an Account!</a>
+                                    <a class="small" href="register.html">Create an Account!</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="login.html">Already have an account? Login!</a>
                                 </div>
                             </div>
                         </div>

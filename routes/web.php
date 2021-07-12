@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,45 +17,18 @@ use App\Http\Controllers\UploadController;
 |
 */
 
-//Route that sends back a view
-Route::get('/', function () {
-    return view('home');
+Route::get('/', [UserController::class, 'dashboard']);
+Route::get('register', [UserController::class, 'register']);
+Route::post('do-register', [UserController::class, 'doRegister']);
+Route::get('login', [UserController::class, 'login']);
+Route::get('do-login', [UserController::class, 'doLogin']);
+Route::get('forget', [UserController::class, 'forget']);
+
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|customer|consultant']], function() {
+    Route::get('/manage', ['middleware' => ['permission:manage-admins'], 'uses' => 'AdminController@manageAdmins']);
 });
 
-// //Route to users - string
-// Route::get('/users', function () {
-//     return 'Welcome to Users Page!';
-// });
-
-// //Route to users - function
-// Route::get('/users', function () {
-//     return redirect('/');
-// });
-
-// Controller
-//Laravel 8 (New)
-//Route::get('/users', [UsersController::class, 'index']);
-//Route::get('/users/about', [UsersController::class, 'about']);
-
-//Laravel 8 (Also New)
-//Route::get('/users', 'App\Http\Controllers\ProductsController@index');   
-
-
-
-
-Route::get('/new-login', function () {
-    return view('newLogin');
-});
-
-Route::get('/new-register', function () {
-    return view('newRegister');
-});
-
-Route::get('/new-forget', function () {
-    return view('newForget');
-});
-
-Auth::routes();
+Route::get('/manage', [AdminController::class,'manageAdmins']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
@@ -76,7 +51,3 @@ route::view('/category','category');
 
 route::view('/admin','admin');
 route::view('/consultant','consultant');
-// Route::get('/home', 'HomeController@index')->name('home');
-// Route::get('/user', 'UserController@index')->name('user');
-// Route::get('/admin', 'AdminController@index')->name('admin');
-// Auth::routes();
