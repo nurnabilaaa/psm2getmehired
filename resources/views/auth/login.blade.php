@@ -30,7 +30,26 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <form method="POST" class="user" action="{{ url('login') }}">
+                                @if ($errors->any())
+                                    <div class="alert alert-danger pl-1 pt-1 pb-1">
+                                        <ul class="mt-0 mb-0 pl-1" style="list-style-type:none;">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                                @if ($message = Session::get('error'))
+                                    <div class="alert alert-danger pl-2 pt-1 pb-1">
+                                        {{ e(Session::get('error')) }}
+                                    </div>
+                                @endif
+                                @if ($message = Session::get('success'))
+                                    <div class="alert alert-success pl-2 pt-1 pb-1">
+                                        {{ e(Session::get('success')) }}
+                                    </div>
+                                @endif
+                                <form method="POST" class="user" action="{{ url('do-login') }}">
                                     @csrf
                                     <div class="form-group">
                                         <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email"

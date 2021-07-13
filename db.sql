@@ -52,8 +52,6 @@ CREATE TABLE `password_resets` (
 
 /*Data for the table `password_resets` */
 
-insert  into `password_resets`(`email`,`token`,`created_at`) values ('nabilazakaria13@gmail.com','$2y$10$yYB8Rot/euyX6C2xFKNItegbKOBovtu/H0Qn562iFBXPM8KGjVhrG','2021-05-26 10:32:46'),('testing2@gmail.com','$2y$10$Awc/09ntgUIsqhJ7Wf225u0PKu/umuC8u.94Xm.8L35JpxTzWbsgi','2021-05-26 10:32:58'),('testing3@gmail.com','$2y$10$DRisyiM.tIEmYbKbV7z6SupCq7WjIOZsKIqq0221KBs15pKN9kg0.','2021-05-26 10:33:10');
-
 /*Table structure for table `permission_role` */
 
 CREATE TABLE `permission_role` (
@@ -67,7 +65,7 @@ CREATE TABLE `permission_role` (
 
 /*Data for the table `permission_role` */
 
-insert  into `permission_role`(`permission_id`,`role_id`) values (16,15),(17,16);
+insert  into `permission_role`(`permission_id`,`role_id`) values (18,18),(19,19);
 
 /*Table structure for table `permission_user` */
 
@@ -93,11 +91,11 @@ CREATE TABLE `permissions` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `permissions_name_unique` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`display_name`,`description`,`created_at`,`updated_at`) values (16,'submit-new-cv','Submit New CV','Customer submit CV','2021-07-12 00:00:24','2021-07-12 00:00:24'),(17,'list-unpick-cv','CV To Pickup','CV to pickup by consultant','2021-07-12 00:00:24','2021-07-12 00:00:24');
+insert  into `permissions`(`id`,`name`,`display_name`,`description`,`created_at`,`updated_at`) values (18,'submit-new-cv','Submit New CV','Customer submit CV','2021-07-13 00:15:14','2021-07-13 00:15:14'),(19,'list-unpick-cv','CV To Pickup','CV to pickup by consultant','2021-07-13 00:15:14','2021-07-13 00:15:14');
 
 /*Table structure for table `role_user` */
 
@@ -123,32 +121,32 @@ CREATE TABLE `roles` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_unique` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`display_name`,`description`,`created_at`,`updated_at`) values (14,'admin','Admin','Control all function application','2021-07-12 00:00:24','2021-07-12 00:00:24'),(15,'customer','Customer','Customer who submit and paid for CV checking','2021-07-12 00:00:24','2021-07-12 00:00:24'),(16,'consultant','Consultant','Customer who check for CV and get paid','2021-07-12 00:00:24','2021-07-12 00:00:24');
+insert  into `roles`(`id`,`name`,`display_name`,`description`,`created_at`,`updated_at`) values (17,'admin','Admin','Control all function application','2021-07-13 00:15:14','2021-07-13 00:15:14'),(18,'customer','Customer','Customer who submit and paid for CV checking','2021-07-13 00:15:14','2021-07-13 00:15:14'),(19,'consultant','Consultant','Customer who check for CV and get paid','2021-07-13 00:15:14','2021-07-13 00:15:14');
 
 /*Table structure for table `users` */
 
 CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `fullname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fullname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `enable` tinyint(1) NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`fullname`,`email`,`phone_no`,`email_verified_at`,`username`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Superadministrator','superadministrator@app.com',NULL,NULL,NULL,'$2y$10$7EZ9ko/Vl8vVIwsQcJYjcO9R4rSCA7adlXkx1Le3ip6l4xaYF3NjK',NULL,'2021-05-30 16:54:58','2021-05-30 16:54:58'),(2,'Administrator','administrator@app.com',NULL,NULL,NULL,'$2y$10$zDUyVEIQ9/Mk1qWPQlhSjOixmoUdV7wmJZPztrP/eq2l3i/FaPV2y',NULL,'2021-05-30 16:54:58','2021-05-30 16:54:58'),(3,'User','user@app.com',NULL,NULL,NULL,'$2y$10$4yvmWKmKqg99sc4Pvt38XOVQgQVkBXOmFywkBsA8GU5KYuTBj9h.C',NULL,'2021-05-30 16:54:58','2021-05-30 16:54:58'),(4,'Role Name','role_name@app.com',NULL,NULL,NULL,'$2y$10$OVcLnl7yaEDijReVz6bk9OlX2SAS1Jxf.zdhb8TPar0NFF7jyCI0G',NULL,'2021-05-30 16:54:59','2021-05-30 16:54:59');
+insert  into `users`(`id`,`email`,`password`,`fullname`,`phone_no`,`email_verified_at`,`enable`,`remember_token`,`created_at`,`updated_at`) values (5,'sadf@asd.com','$2y$10$4bZo5MKIP3GhA01y9RBYB.RryLQ.dXqalrGfAKC36E4Bnp4RCPjKG','SDF','sadf',NULL,1,NULL,'2021-07-12 23:46:10','2021-07-12 23:46:10'),(6,'sdf@asd.com','$2y$10$4bZo5MKIP3GhA01y9RBYB.RryLQ.dXqalrGfAKC36E4Bnp4RCPjKG','ASDF','sdf',NULL,1,NULL,'2021-07-12 23:49:03','2021-07-12 23:49:03');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

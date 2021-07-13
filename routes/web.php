@@ -21,7 +21,7 @@ Route::get('/', [UserController::class, 'dashboard']);
 Route::get('register', [UserController::class, 'register']);
 Route::post('do-register', [UserController::class, 'doRegister']);
 Route::get('login', [UserController::class, 'login']);
-Route::get('do-login', [UserController::class, 'doLogin']);
+Route::post('do-login', [UserController::class, 'doLogin']);
 Route::get('forget', [UserController::class, 'forget']);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|customer|consultant']], function() {
@@ -50,4 +50,8 @@ route::view('/result','result');
 route::view('/category','category');
 
 route::view('/admin','admin');
-route::view('/consultant','consultant');
+
+
+
+
+Route::get('logout',[UserController::class, 'logout']);

@@ -27,12 +27,12 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        <form method="POST" class="user" action="{{ url('register') }}">
+                        <form method="POST" class="user" action="{{ url('do-register') }}">
                             @csrf
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
-                                    <input id="name" type="text" class="form-control form-control-user @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}"
-                                           required autocomplete="name" autofocus placeholder="First Name">
+                                    <input id="fullname" type="text" class="form-control form-control-user @error('fullname') is-invalid @enderror" name="fullname" value="{{ old('fullname') }}"
+                                           required autocomplete="fullname" autofocus placeholder="Your Name">
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -43,6 +43,15 @@
                             <div class="form-group">
                                 <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
                                        required autocomplete="email" placeholder="Email Address">
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <input id="phone_no" type="text" class="form-control form-control-user @error('phone_no') is-invalid @enderror" name="phone_no" value="{{ old('phone_no') }}"
+                                       required autocomplete="phone_no" placeholder="Handphone Number">
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
