@@ -1,13 +1,16 @@
 @extends('auth.main')
 @section('content')
     <div class="col-12">
-        <div class="card-group">
-            <div class="py-5 text-white d-md-down-none">
-                <div class="text-center">
-                    <img src="{{ asset('images/g14.jpg') }}" style="width: 450px;margin-right: 20px;border-radius: 40px;"/>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-5">
+                <div class="py-5 text-white d-md-down-none">
+                    <div class="text-center">
+                        <img src="{{ asset('images/g14.jpg') }}" style="width: 450px;margin-right: 20px;border-radius: 40px;"/>
+                    </div>
                 </div>
             </div>
-            <div class="p-4">
+            <div class="col-4">
                 <div class="text-center">
                     <img src="{{ asset('images/getmehired.png') }}" style="width: 200px; margin-bottom: 15px"/>
                 </div>
@@ -48,7 +51,8 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" style="text-transform: none" name="email"
+                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" style="text-transform: none"
+                                       name="email"
                                        value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Enter Email Address...">
                             </div>
                         </div>
@@ -63,16 +67,17 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror" style="text-transform: none" name="password" required
+                                <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror" style="text-transform: none"
+                                       name="password" required
                                        autocomplete="current-password" placeholder="Password">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <input class="form-check-input" type="checkbox" name="remember"
+                            <input class="form-check-input" type="checkbox" name="remember" style="margin-left: 1px"
                                    id="remember" {{ old('remember') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="customCheck">Remember Me</label>
+                            <label class="form-check-label" for="customCheck" style="margin-left: 20px">Remember Me</label>
                         </div>
                         <div class="col-6 text-right" style="margin-left: -5px;">
                             <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -90,6 +95,7 @@
                     </div>
                 </form>
             </div>
+            <div class="col-2"></div>
         </div>
     </div>
 @stop
