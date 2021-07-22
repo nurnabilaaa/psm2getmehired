@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <form method="POST" action="{{ url('do-register') }}" id="form-register">
+                <form method="POST" action="{{ url('do-register') }}" id="form-register" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
@@ -48,9 +48,9 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="fullname" type="text" class="form-control form-control-user @error('fullname') is-invalid @enderror" name="fullname"
-                                       value="{{ old('fullname') }}"
-                                       required autocomplete="fullname" autofocus placeholder="Your Name" style="text-transform: none">
+                                <input id="fullname" type="text" class="form-control @error('fullname') is-invalid @enderror" name="fullname"
+                                       value="{{ old('fullname') }}" autofocus placeholder="Your Name">
+{{--                                @error('fullname') <div class="invalid-feedback text-right">{{ $message }}</div> @enderror--}}
                             </div>
                         </div>
                     </div>
@@ -64,8 +64,8 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
-                                       required autocomplete="email" placeholder="Email Address" style="text-transform: none">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
+                                       placeholder="Email Address" >
                             </div>
                         </div>
                     </div>
@@ -79,9 +79,8 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="phone_no" type="text" class="form-control form-control-user @error('phone_no') is-invalid @enderror" name="phone_no"
-                                       value="{{ old('phone_no') }}"
-                                       required autocomplete="phone_no" placeholder="Handphone Number" style="text-transform: none">
+                                <input id="phone_no" type="text" class="form-control @error('phone_no') is-invalid @enderror" name="phone_no" value="{{ old('phone_no') }}"
+                                       placeholder="Handphone Number" >
                             </div>
                         </div>
                     </div>
@@ -95,11 +94,10 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <select id="password-confirm" class="form-control" name="password_confirmation" required
-                                        autocomplete="new-password" style="text-transform: none">
+                                <select class="form-control @error('package') is-invalid @enderror" name="package" required>
                                     <option value="">Select Package</option>
-                                    <option value="CV Writing">CV Writing</option>
-                                    <option value="CV Templates">CV Templates</option>
+                                    <option value="CV Writing" @if(old('package') == 'CV Writing') selected @endif>CV Writing</option>
+                                    <option value="CV Templates" @if(old('package') == 'CV Templates') selected @endif>CV Templates</option>
                                 </select>
                                 <div class="input-group-append">
                                 <span class="input-group-text">
@@ -119,8 +117,8 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror" name="password" required
-                                       autocomplete="new-password" placeholder="Password" style="text-transform: none">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password"
+                                       >
                             </div>
                         </div>
                     </div>
@@ -134,8 +132,7 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="password-confirm" type="password" class="form-control form-control-user" name="password_confirmation" required
-                                       autocomplete="new-password" placeholder="Repeat Password" style="text-transform: none">
+                                <input type="password" class="form-control" name="password_confirmation" placeholder="Repeat Password" >
                             </div>
                         </div>
                     </div>
@@ -154,7 +151,7 @@
             <div class="col-2"></div>
         </div>
     </div>
-
+    
     <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-info modal-lg" role="document">
             <div class="modal-content">

@@ -66,10 +66,6 @@ td[role="columnheader"] {
     width: 200px;
 }
 
-.form-control {
-    text-transform: uppercase;
-}
-
 .data-not-complete {
     background-color: rgba(244, 100, 95, 0.25) !important;
 }

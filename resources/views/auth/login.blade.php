@@ -14,7 +14,7 @@
                 <div class="text-center">
                     <img src="{{ asset('images/getmehired.png') }}" style="width: 200px; margin-bottom: 15px"/>
                 </div>
-                <form method="POST" action="{{ url('do-login') }}" id="form-login">
+                <form method="POST" action="{{ url('do-login') }}" id="form-login" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
@@ -51,7 +51,7 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" style="text-transform: none"
+                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror"
                                        name="email"
                                        value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Enter Email Address...">
                             </div>
@@ -67,7 +67,7 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror" style="text-transform: none"
+                                <input id="password" type="password" class="form-control form-control-user @error('password') is-invalid @enderror"
                                        name="password" required
                                        autocomplete="current-password" placeholder="Password">
                             </div>

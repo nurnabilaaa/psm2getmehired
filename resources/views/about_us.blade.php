@@ -9,3 +9,11 @@
         </div>
     </div>
 @stop
+
+@section('page-css')
+    <style type="text/css">
+        .body-content {
+            background-color: #E9EAED;
+        }
+    </style>
+@stop
