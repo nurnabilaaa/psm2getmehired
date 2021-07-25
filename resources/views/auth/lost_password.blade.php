@@ -1,23 +1,25 @@
 @extends('auth.main')
 @section('content')
-    
     <div class="col-12">
-        <div class="card-group">
-            <div class="py-5 text-white d-md-down-none">
-                <div class="text-center">
-                    <img src="{{ asset('images/g14.png') }}"/>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-5">
+                <div class="py-5 text-white d-md-down-none">
+                    <div class="text-center">
+                        <img src="{{ asset('images/g14.jpg') }}" style="width: 450px;margin-right: 20px;border-radius: 40px;"/>
+                    </div>
                 </div>
             </div>
-            <div class="p-4">
+            <div class="col-4">
                 <div class="text-center">
-                    <img src="{{ asset('images/logo-qsmart-black.png') }}" style="width: 250px"/>
+                    <img src="{{ asset('images/getmehired.png') }}" style="width: 200px; margin-bottom: 15px"/>
                 </div>
                 <form method="POST" action="{{ url('password/lost') }}" id="form-forgot" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
-                            <h2 class="text-center">Forgot Password</h2>
-                            <p class="text-muted text-center">E-mel untuk set semula katalaluan akan dihantar kepada anda</p>
+                            <h2 class="text-center">I Lost My Password</h2>
+                            <p class="text-muted text-center">Please enter your username and we will send to you the instruction</p>
                             @if ($errors->any())
                                 <div class="alert alert-danger pl-1 pt-1 pb-1">
                                     <ul class="mt-0 mb-0 pl-1" style="list-style-type:none;">
@@ -49,22 +51,31 @@
                                     </svg>
                                 </span>
                                 </div>
-                                <div class="dx-texteditor-with-icon" data-dx="textbox" data-name="username" data-mode="text" data-case="lowercase" data-placeholder="Katanama"
-                                     data-value="" data-validate="true" data-validation-type="required" data-validation-group="form"></div>
+                                <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror"
+                                       name="email"
+                                       value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Enter Email Address...">
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
-                            <a href="{{  URL::to('login') }}" class="btn btn-ghost-danger">Batal</a>
-                        </div>
+                        <div class="col-6"></div>
                         <div class="col-6 text-right" style="margin-left: -5px;">
-                            <div data-dx="btn-submit" data-type="default" data-text="Hantar" data-disabled="true" data-validation-group="form" data-form="form-forgot">
-                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                Set New Password
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-left">
+                            <a href="{{ url('login') }}" class="btn btn-link px-0">Login</a>
+                        </div>
+                        <div class="col-6 text-right">
+                            <a href="{{ url('register') }}" class="btn btn-link px-0">Create an Account!</a>
                         </div>
                     </div>
                 </form>
             </div>
+            <div class="col-2"></div>
         </div>
     </div>
 @stop

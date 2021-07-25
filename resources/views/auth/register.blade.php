@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <form method="POST" action="{{ url('do-register') }}" id="form-register" novalidate>
+                <form method="POST" action="{{ url('register') }}" id="form-register" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">

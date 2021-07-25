@@ -14,7 +14,7 @@
                 <div class="text-center">
                     <img src="{{ asset('images/getmehired.png') }}" style="width: 200px; margin-bottom: 15px"/>
                 </div>
-                <form method="POST" action="{{ url('do-login') }}" id="form-login" novalidate>
+                <form method="POST" action="{{ url('login') }}" id="form-login" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
@@ -37,6 +37,11 @@
                             @if ($message = Session::get('success'))
                                 <div class="alert alert-success pl-2 pt-1 pb-1">
                                     {{ e(Session::get('success')) }}
+                                </div>
+                            @endif
+                            @if ($paymentMsg != null)
+                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">
+                                    {{ $paymentMsg }}
                                 </div>
                             @endif
                         </div>
@@ -87,7 +92,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ url('password.request') }}" class="btn btn-link px-0">Forgot password?</a>
+                            <a href="{{ url('password/lost') }}" class="btn btn-link px-0">Forgot password?</a>
                         </div>
                         <div class="col-6">
                             <a href="{{ url('register') }}" class="btn btn-link px-0">Create an Account!</a>

@@ -12,11 +12,10 @@
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
-        "mollie/mollie-api-php": "^2.36",
-        "santigarcor/laratrust": "^6.3",
-        "stripe/stripe-php": "^7.80"
+        "santigarcor/laratrust": "^6.3"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.8",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
@@ -46,6 +45,16 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "php artisan optimize",
+            "php artisan cache:clear",
+            "php artisan route:clear",
+            "php artisan view:clear",
+            "php artisan config:clear"
         ]
     },
     "extra": {

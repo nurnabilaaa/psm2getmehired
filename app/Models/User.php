@@ -8,6 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
+/**
+ * @property mixed email
+ * @property mixed|string password
+ * @property mixed|string fullname
+ * @property mixed phone_no
+ * @property mixed package
+ * @property int|mixed enable
+ */
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
