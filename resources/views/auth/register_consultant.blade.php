@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <form method="POST" action="{{ url('register-consultant') }}" id="form-register" novalidate>
+                <form method="POST" action="{{ url('register-consultant') }}" id="form-register" enctype="multipart/form-data" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
@@ -50,7 +50,6 @@
                                 </div>
                                 <input id="fullname" type="text" class="form-control @error('fullname') is-invalid @enderror" name="fullname"
                                        value="{{ old('fullname') }}" autofocus placeholder="Your Name">
-                                {{--                                @error('fullname') <div class="invalid-feedback text-right">{{ $message }}</div> @enderror--}}
                             </div>
                         </div>
                     </div>
@@ -71,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text">
                                     <svg class="c-icon">
@@ -82,6 +81,13 @@
                                 <input id="phone_no" type="text" class="form-control @error('phone_no') is-invalid @enderror" name="phone_no" value="{{ old('phone_no') }}"
                                        placeholder="Handphone Number" >
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                                <input id="cv" type="file" name="cv" hidden>
+                                <label for="cv" class="upload-label">Upload CV</label>
+                                <span id="file-chosen">No file chosen</span>
                         </div>
                     </div>
                     <div class="row">

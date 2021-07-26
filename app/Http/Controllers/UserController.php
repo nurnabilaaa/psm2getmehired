@@ -32,7 +32,8 @@ class UserController extends Controller
 
         $data = [
             'menu'  => ['menu' => $for, 'subMenu' => ''],
-            'users' => $users
+            'users' => $users,
+            'for'   => $for
         ];
 
         return view('user.index', $data);
@@ -98,27 +99,34 @@ class UserController extends Controller
                                     'fullname' => 'required',
                                     'email'    => 'required:email',
                                     'phone_no' => 'required',
+                                    'cv'       => 'required',
                                     'password' => 'required|confirmed|min:6'
                                 ]);
+
+            $fileBase = request()->file('cv');
+            $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
+            $fileBase->move(public_path('cv'), $newName);
 
             if (Models\User::where('email', request()->get('email'))->get()->count() > 0) {
                 return redirect()->back()->withInput()->with('error', 'Email has been used. Please use forgot password to retrieve your password');
             }
 
-            $user           = new Models\User();
-            $user->email    = request()->get('email');
-            $user->password = \Hash::make(request()->get('password'));
-            $user->fullname = strtoupper(request()->get('fullname'));
-            $user->phone_no = request()->get('phone_no');
-            $user->phone_no = str_replace('-', '', $user->phone_no);
-            $user->phone_no = str_replace('+6', '', $user->phone_no);
-            $user->phone_no = str_replace('+', '', $user->phone_no);
-            $user->phone_no = str_replace(' ', '', $user->phone_no);
-            $user->enable   = 0;
+            $user                    = new Models\User();
+            $user->email             = request()->get('email');
+            $user->password          = \Hash::make(request()->get('password'));
+            $user->fullname          = strtoupper(request()->get('fullname'));
+            $user->phone_no          = request()->get('phone_no');
+            $user->phone_no          = str_replace('-', '', $user->phone_no);
+            $user->phone_no          = str_replace('+6', '', $user->phone_no);
+            $user->phone_no          = str_replace('+', '', $user->phone_no);
+            $user->phone_no          = str_replace(' ', '', $user->phone_no);
+            $user->cv_filename       = $newName;
+            $user->enable            = 0;
+            $user->consultant_status = 0;
             $user->save();
 
-            $consultantRole = Models\Role::where('name', 'consultant')->first();
-            $user->attachRole($consultantRole);
+//            $consultantRole = Models\Role::where('name', 'consultant')->first();
+//            $user->attachRole($consultantRole);
 
             return redirect()->to('login')->with('success', 'Your request is being viewed. We will notify you soon.');
         }
@@ -259,6 +267,13 @@ class UserController extends Controller
         ];
 
         if (Auth::user()->hasRole('admin')) {
+            $data['totalCV']         = Models\CurriculumVitae::selectRaw('COUNT(*) as total')->get()->first();
+            $data['totalCompleted']  = Models\CurriculumVitae::selectRaw('COUNT(*) as total')->where('status', 3)->get()->first();
+            $data['totalOnProgress'] = Models\CurriculumVitae::selectRaw('COUNT(*) as total')->where('status', 2)->get()->first();
+            $data['totalNotPickup']  = Models\CurriculumVitae::selectRaw('COUNT(*) as total')->where('status', 1)->get()->first();
+            $data['totalCustomer']   = Models\VWUsers::selectRaw('COUNT(*) as total')->where('role', 'customer')->get()->first();
+            $data['totalConsultant'] = Models\VWUsers::selectRaw('COUNT(*) as total')->where('role', 'consultant')->get()->first();
+            $data['totalIncome']     = Models\CurriculumVitae::selectRaw('SUM(price) as total')->get()->first();
             return view('dashboard.admin', $data);
         }
         elseif (Auth::user()->hasRole('consultant')) {
@@ -267,6 +282,28 @@ class UserController extends Controller
         else {
             return view('dashboard.customer', $data);
         }
+    }
+
+    public function create($for)
+    {
+        $data = [
+            'menu' => ['menu' => $for, 'subMenu' => ''],
+            'for'  => $for
+        ];
+
+        return view('user.form', $data);
+    }
+
+    public function edit($for, $id)
+    {
+        $user = Models\User::find($id);
+        $data = [
+            'menu' => ['menu' => $for, 'subMenu' => ''],
+            'for'  => $for,
+            'user' => $user
+        ];
+
+        return view('user.form', $data);
     }
 
     public function logout()

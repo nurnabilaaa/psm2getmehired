@@ -15,6 +15,8 @@ use Laratrust\Traits\LaratrustUserTrait;
  * @property mixed phone_no
  * @property mixed package
  * @property int|mixed enable
+ * @property mixed|string cv_filename
+ * @property int|mixed consultant_status
  */
 class User extends Authenticatable
 {

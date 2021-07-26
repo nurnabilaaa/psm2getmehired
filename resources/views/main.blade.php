@@ -58,7 +58,7 @@
         </li>
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Admin') echo 'c-active' @endphp" href="{{ url('user/admin') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'admin') echo 'c-active' @endphp" href="{{ url('user/admin') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-user') }}"></use>
                     </svg>
@@ -68,7 +68,7 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Consultant') echo 'c-active' @endphp" href="{{ url('user/consultant') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'consultant') echo 'c-active' @endphp" href="{{ url('user/consultant') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-contact') }}"></use>
                     </svg>
@@ -78,11 +78,21 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Customer') echo 'c-active' @endphp" href="{{ url('user/customer') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'customer') echo 'c-active' @endphp" href="{{ url('user/customer') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
                     </svg>
                     Customer
+                </a>
+            </li>
+        @endif
+        @if (\Laratrust::hasRole('admin'))
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Curriculum Vitae') echo 'c-active' @endphp" href="{{ route('curriculum_vitae.index') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-description') }}"></use>
+                    </svg>
+                    Curriculum Vitae
                 </a>
             </li>
         @endif

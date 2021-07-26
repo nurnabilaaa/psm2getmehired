@@ -3,25 +3,7 @@
     <div class="card">
         <div class="card-header">
             <div class="mt-1 float-left">
-                @if($for == 'admin')
-                    <strong>List Admin</strong>
-                @elseif($for == 'consultant')
-                    <strong>List Consultant</strong>
-                @elseif($for == 'customer')
-                    <strong>List Customer</strong>
-                @endif
-            </div>
-            <div class="float-right" style="display: flex;flex-direction: row;">
-                @if($for == 'admin')
-                    <a class="btn btn-primary btn-sm" href="{{ url('user/create/admin') }}" style="margin-right: 4px;padding-top: 5px">
-                        Add Admin
-                    </a>
-                @endif
-                <button class="btn btn-primary btn-sm grid-btn-excel" type="button" style="margin-right: 4px;">
-                    <svg class="c-icon">
-                        <use xlink:href="{{ asset('icons/free.svg#cil-cloud-download') }}"></use>
-                    </svg>
-                </button>
+                <strong>List All Curriculum Vitae</strong>
             </div>
         </div>
         <div class="card-body">
@@ -42,15 +24,16 @@
                     <thead>
                     <tr>
                         <th scope="col" style="width: 3%">#</th>
-                        <th scope="col" style="width: 28%">@sortablelink('fullname','Fullname')</th>
-                        <th scope="col" style="width: 11%">@sortablelink('email','Email')</th>
+                        <th scope="col" style="width: 10%">@sortablelink('created_at','Date')</th>
+                        <th scope="col" style="width: 27%">@sortablelink('fullname','Customer Name')</th>
+                        <th scope="col" style="width: 23%">@sortablelink('email','Email')</th>
                         <th scope="col" style="width: 11%">@sortablelink('phone_no','Handphone No')</th>
-                        <th scope="col" style="width: 11%">@sortablelink('status','Status')</th>
-                        <th scope="col" style="width: 9%">&nbsp;</th>
+                        <th scope="col" style="width: 13%">@sortablelink('package','Package')</th>
+                        <th scope="col" style="width: 13%">@sortablelink('status','Status')</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($users as $key => $user)
+                    @foreach ($cvs as $key => $cv)
                         <tr>
                             <td scope="row">
                                 @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
@@ -60,26 +43,22 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $user->fullname }}
+                                {{ $cv->created_at->format('d M Y') }}
                             </td>
                             <td>
-                                {{ $user->email }}
+                                {{ $cv->fullname }}
                             </td>
                             <td>
-                                {{ $user->phone_no }}
+                                {{ $cv->email }}
                             </td>
                             <td>
-                                @if($user->enable) Enable @else Disabled @endif
+                                {{ $cv->phone_no }}
                             </td>
-                            <td class="text-center">
-                                <div class="buttons">
-                                    <a href="{{ url('user/edit/' . $for . '/' . $user->id) }}" class="mr-1">
-                                        Edit
-                                    </a>
-                                    <a href="javascript:void(0)" data-id="{{ $user->id }}" class="text-danger delete">
-                                        Delete
-                                    </a>
-                                </div>
+                            <td>
+                                {{ $cv->package }}
+                            </td>
+                            <td>
+                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
                             </td>
                         </tr>
                     @endforeach
@@ -103,12 +82,12 @@
                     </form>
                 </div>
                 <div class="float-right">
-                    {{ $users->appends(\Request::except('page'))->render() }}
+                    {{ $cvs->appends(\Request::except('page'))->render() }}
                 </div>
             </div>
         </div>
     </div>
-    
+
     <form id="form-delete" method="post">
         <input type="hidden" name="_method"/>
         <input type="hidden" name="_token">
@@ -121,27 +100,6 @@
             $('#perPage').on('change', function () {
                 $('#sd').submit();
             });
-
-            $('.delete').on('click', function () {
-                let id = $(this).attr('data-id');
-                swal({
-                    title: 'Are you sure?',
-                    text: "This record will be deleted!",
-                    icon: 'warning',
-                    dangerMode: true,
-                    buttons: {
-                        confirm: {text: 'Yes', className: 'sweet-danger'},
-                        cancel: 'No'
-                    },
-                }).then((willDo) => {
-                    if (willDo) {
-                        $('input[name="_token"]').val($('meta[name="csrf-token"]').attr('content'));
-                        $('input[name="_method"]').val('DELETE');
-                        $('#form-delete').attr('action', '{{ \URL::to('invoice') }}/' + id);
-                        $('#form-delete').submit();
-                    }
-                });
-            })
         });
     </script>
 @append

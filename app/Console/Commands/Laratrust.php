@@ -1,18 +1,43 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
 use App\Models\Permission;
 use App\Models\Role;
+use Illuminate\Console\Command;
 
-class HomeController extends Controller
+class Laratrust extends Command
 {
     /**
-     * Show the application dashboard.
+     * The name and signature of the console command.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @var string
      */
-    public function index()
+    protected $signature = 'command:name';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
     {
         $roles = Role::all(); // Pull back a given role
         foreach ($roles as $role) {

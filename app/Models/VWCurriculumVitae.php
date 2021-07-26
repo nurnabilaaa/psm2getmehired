@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Kyslik\ColumnSortable\Sortable;
 
-class VWUsers extends \Eloquent
+class VWCurriculumVitae extends \Eloquent
 {
     use Sortable;
 
-    protected $table = 'vw_users';
+    protected $table = 'vw_curriculum_vitae';
 }
