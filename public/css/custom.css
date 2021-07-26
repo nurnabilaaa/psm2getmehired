@@ -81,11 +81,6 @@ td[role="columnheader"] {
     }
 }
 
-.table td,
-.table th {
-    padding: .30rem !important;
-}
-
 .btn-warning.focus,
 .btn-warning:focus {
     box-shadow: none;

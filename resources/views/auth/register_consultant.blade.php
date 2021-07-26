@@ -11,11 +11,11 @@
                 </div>
             </div>
             <div class="col-4">
-                <form method="POST" action="{{ url('register') }}" id="form-register" novalidate>
+                <form method="POST" action="{{ url('register-consultant') }}" id="form-register" novalidate>
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
-                            <h2 class="text-center">Register</h2>
+                            <h2 class="text-center">Register as Consultant</h2>
                             <p class="text-muted text-center">Please fill in all field and submit</p>
                             @if ($errors->any())
                                 <div class="alert alert-danger pl-1 pt-1 pb-1">
@@ -50,7 +50,7 @@
                                 </div>
                                 <input id="fullname" type="text" class="form-control @error('fullname') is-invalid @enderror" name="fullname"
                                        value="{{ old('fullname') }}" autofocus placeholder="Your Name">
-{{--                                @error('fullname') <div class="invalid-feedback text-right">{{ $message }}</div> @enderror--}}
+                                {{--                                @error('fullname') <div class="invalid-feedback text-right">{{ $message }}</div> @enderror--}}
                             </div>
                         </div>
                     </div>
@@ -90,35 +90,11 @@
                                 <div class="input-group-prepend">
                                 <span class="input-group-text">
                                     <svg class="c-icon">
-                                        <use xlink:href="{{ asset('icons/free.svg#cil-check') }}"></use>
-                                    </svg>
-                                </span>
-                                </div>
-                                <select class="form-control @error('package') is-invalid @enderror" name="package" required>
-                                    <option value="">Select Package</option>
-                                    <option value="CV Writing" @if(old('package') == 'CV Writing') selected @endif>CV Writing</option>
-                                    <option value="CV Templates" @if(old('package') == 'CV Templates') selected @endif>CV Templates</option>
-                                </select>
-                                <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#packageModal">Show</a>
-                                </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <svg class="c-icon">
                                         <use xlink:href="{{ asset('icons/free.svg#cil-lock-locked') }}"></use>
                                     </svg>
                                 </span>
                                 </div>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password"
-                                       >
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
                             </div>
                         </div>
                     </div>
@@ -149,55 +125,6 @@
                 </form>
             </div>
             <div class="col-2"></div>
-        </div>
-    </div>
-    
-    <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-info modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Package Detail</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-1"></div>
-                        <div class="col-5">
-                            <h3>CV Writing</h3><br/>
-                            <h4>RM80</h4><br/>
-                            One-off<br/><br/>
-                            You Get<br/>
-                            + Full writing ATS CV<br/>
-                            + Highlight achievement<br/>
-                            + Redesign and rewrite<br/>
-                            + Secret CV structure<br/>
-                            + Free CV Templates<br/>
-                            + Editable file<br/>
-                            + Mini library access<br/>
-                            + Secret checklist<br/>
-                        </div>
-                        <div class="col-5">
-                            <h3>CV Templates</h3><br/>
-                            <h4>RM50</h4><br/>
-                            One-off<br/><br/>
-                            You Get<br/>
-                            + 2 ATS CV<br/>
-                            + 3 Non ATS CV<br/>
-                            + Full guidelines<br/>
-                            + Free example<br/>
-                            + Secret CV structure<br/>
-                            + Secret CV structure<br/>
-                            + Editable file<br/>
-                            + Mini library access<br/>
-                            + Secret checklist<br/>
-                        </div>
-                        <div class="col-1"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
         </div>
     </div>
 @stop

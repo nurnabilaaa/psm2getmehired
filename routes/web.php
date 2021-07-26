@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UserController::class, 'dashboard']);
-Route::match(['get', 'post'], 'register', [UserController::class, 'register']);
+Route::match(['get', 'post'], 'register-customer', [UserController::class, 'registerCustomer']);
+Route::match(['get', 'post'], 'register-consultant', [UserController::class, 'registerConsultant']);
 Route::get('pay/{userId}', [UserController::class, 'pay']);
 Route::post('toyyibpay-callback', [UserController::class, 'toyyibpayCallback']);
 Route::match(['get', 'post'], 'login', [UserController::class, 'login']);

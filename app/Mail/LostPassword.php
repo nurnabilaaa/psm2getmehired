@@ -2,14 +2,12 @@
 
 namespace App\Mail;
 
-use App\Libs\App;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class LostPassword extends Mailable
 {
-    use App;
     use Queueable, SerializesModels;
 
     protected $data;
@@ -31,11 +29,11 @@ class LostPassword extends Mailable
      */
     public function build()
     {
-        $mailFromEmail = $this->getDbConfig('email_from') == null ? 'a.fattah@ymail.com' : $this->getDbConfig('email_from');
-        $mailFromName = $this->getDbConfig('email_name') == null ? 'Smart Clinic' : $this->getDbConfig('email_name');
+        $mailFromEmail = env('MAIL_FROM_ADDRESS');
+        $mailFromName = env('MAIL_FROM_NAME');
 
         return $this->from($mailFromEmail, $mailFromName)
-            ->subject('[Smart Clinic MPK] Set Semula Katalaluan')
+            ->subject('[Getme Hired] Reset Your Password')
             ->view('email.lost_password')
             ->with([
                 'name' => $this->data['name'],

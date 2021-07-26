@@ -39,11 +39,11 @@
                                     {{ e(Session::get('success')) }}
                                 </div>
                             @endif
-                            @if ($paymentMsg != null)
-                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">
-                                    {{ $paymentMsg }}
-                                </div>
-                            @endif
+{{--                            @if ($paymentMsg != null)--}}
+{{--                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">--}}
+{{--                                    {{ $paymentMsg }}--}}
+{{--                                </div>--}}
+{{--                            @endif--}}
                         </div>
                     </div>
                     <div class="row">
@@ -91,11 +91,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-6"></div>
+                        <div class="col-6 text-right">
                             <a href="{{ url('password/lost') }}" class="btn btn-link px-0">Forgot password?</a>
                         </div>
-                        <div class="col-6">
-                            <a href="{{ url('register') }}" class="btn btn-link px-0">Create an Account!</a>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="{{ url('register-customer') }}" class="btn btn-link px-0">Check My CV</a>
+                        </div>
+                        <div class="col-8 text-right">
+                            <a href="{{ url('register-consultant') }}" class="btn btn-link px-0">I Want To Be a Consultant</a>
                         </div>
                     </div>
                 </form>

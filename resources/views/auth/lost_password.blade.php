@@ -67,11 +67,9 @@
                     </div>
                     <div class="row">
                         <div class="col-6 text-left">
-                            <a href="{{ url('login') }}" class="btn btn-link px-0">Login</a>
+                            <a href="{{ url('login') }}" class="btn btn-link px-0">< Login</a>
                         </div>
-                        <div class="col-6 text-right">
-                            <a href="{{ url('register') }}" class="btn btn-link px-0">Create an Account!</a>
-                        </div>
+                        <div class="col-6 text-right"></div>
                     </div>
                 </form>
             </div>

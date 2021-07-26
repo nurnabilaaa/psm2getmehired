@@ -43,8 +43,8 @@
         <a class="navbar-brand" href="{{ url('/') }}">
             <h2 class="c-sidebar-brand-full" style="color: white">Getme Hired</h2>
             <h2 class="c-sidebar-brand-minimized ml-3" style="color: white">GH</h2>
-{{--            <img class="c-sidebar-brand-full" src="{{ asset('images/getmehired.png') }}" height="47">--}}
-{{--            <img class="c-sidebar-brand-minimized ml-3" src="{{ asset('images/getmehired.png') }}" width="50" height="20">--}}
+            {{--            <img class="c-sidebar-brand-full" src="{{ asset('images/getmehired.png') }}" height="47">--}}
+            {{--            <img class="c-sidebar-brand-minimized ml-3" src="{{ asset('images/getmehired.png') }}" width="50" height="20">--}}
         </a>
     </div>
     <ul class="c-sidebar-nav">
@@ -56,13 +56,33 @@
                 Utama
             </a>
         </li>
-        @if (strpos(Auth::user()->role, 'PENTADBIR SISTEM') !== false)
+        @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
                 <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
                     </svg>
-                    Semua Pengguna
+                    Admin
+                </a>
+            </li>
+        @endif
+        @if (\Laratrust::hasRole('admin'))
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
+                    </svg>
+                    Consultant
+                </a>
+            </li>
+        @endif
+        @if (\Laratrust::hasRole('admin'))
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
+                    </svg>
+                    Customer
                 </a>
             </li>
         @endif
@@ -91,6 +111,16 @@
                 </li>
             </ul>
         </li>
+        @if (\Laratrust::hasRole('customer'))
+            <li class="c-sidebar-nav-item mt-auto">
+                <a class="c-sidebar-nav-link c-sidebar-nav-link-danger" href="https://coreui.io" target="_top">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-3d') }}"></use>
+                    </svg>
+                    Apply to be a Consultant
+                </a>
+            </li>
+        @endif
     </ul>
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 </div>
