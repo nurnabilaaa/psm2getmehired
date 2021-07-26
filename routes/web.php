@@ -32,7 +32,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|customer|consult
 Route::get('/manage', [AdminController::class, 'manageAdmins']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
+Route::get('user/{for}', [App\Http\Controllers\UserController::class, 'index'])->name('user');
 Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 
 Route::get('/checkout', 'CheckoutController@checkout');

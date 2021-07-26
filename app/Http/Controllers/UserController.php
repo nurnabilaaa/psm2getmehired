@@ -15,9 +15,27 @@ class UserController extends Controller
         $this->middleware(['auth'])->only(['dashboard']);
     }
 
-    public function index()
+    public function index($for)
     {
-        return view('user.index');
+        $perPage = request()->get('perPage') != null ? request()->get('perPage') : 10;
+        $keyword = request()->get('q');
+        $users   = null;
+        if (\Laratrust::hasRole('admin')) {
+            $users = Models\VWUsers::where('role', $for)->where(function ($query) use ($keyword) {
+                if ($keyword) {
+                    $query->whereRaw('`email` LIKE "%' . $keyword . '%"
+                    OR `fullname` LIKE "%' . $keyword . '%"
+                    OR `phone_no` LIKE "%' . $keyword . '%"');
+                }
+            })->sortable(['fullname' => 'asc'])->paginate($perPage);
+        }
+
+        $data = [
+            'menu'  => ['menu' => $for, 'subMenu' => ''],
+            'users' => $users
+        ];
+
+        return view('user.index', $data);
     }
 
     public function registerCustomer()
@@ -101,8 +119,6 @@ class UserController extends Controller
 
             $consultantRole = Models\Role::where('name', 'consultant')->first();
             $user->attachRole($consultantRole);
-            $customerRole = Models\Role::where('name', 'customer')->first();
-            $user->attachRole($customerRole);
 
             return redirect()->to('login')->with('success', 'Your request is being viewed. We will notify you soon.');
         }

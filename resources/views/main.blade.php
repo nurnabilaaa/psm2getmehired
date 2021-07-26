@@ -58,9 +58,9 @@
         </li>
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Admin') echo 'c-active' @endphp" href="{{ url('user/admin') }}">
                     <svg class="c-sidebar-nav-icon">
-                        <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
+                        <use xlink:href="{{ asset('icons/free.svg#cil-user') }}"></use>
                     </svg>
                     Admin
                 </a>
@@ -68,9 +68,9 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Consultant') echo 'c-active' @endphp" href="{{ url('user/consultant') }}">
                     <svg class="c-sidebar-nav-icon">
-                        <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
+                        <use xlink:href="{{ asset('icons/free.svg#cil-contact') }}"></use>
                     </svg>
                     Consultant
                 </a>
@@ -78,7 +78,7 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'User') echo 'c-active' @endphp" href="{{ url('user') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Customer') echo 'c-active' @endphp" href="{{ url('user/customer') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
                     </svg>
@@ -234,6 +234,7 @@
 <script src="{{ asset('js/cropper.min.js') }}"></script>
 <script src="{{ asset('js/clipboard.min.js') }}"></script>
 <script src="{{ asset('js/moment.min.js') }}"></script>
+<script src="{{ asset('js/sweetalert.min.js') }}"></script>
 <!--[if IE]><!-->
 <script src="{{ asset('js/svgxuse.min.js') }}"></script>
 <!--<![endif]-->
