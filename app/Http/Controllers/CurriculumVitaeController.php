@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Libs\ToyyibPay;
 use Illuminate\Http\Request;
 use App\Models;
 
@@ -43,6 +44,44 @@ class CurriculumVitaeController extends Controller
         ];
 
         return view('curriculum_vitae.index', $data);
+    }
+
+    public function pay($userId, $package)
+    {
+        $user  = Models\User::find($userId);
+
+        $vitae              = new Models\CurriculumVitae();
+        $vitae->customer_id = $user->id;
+        $vitae->package     = $package;
+        if ($package == 'CV Writing') {
+            $vitae->price = 80;
+        }
+        else {
+            $vitae->price = 50;
+        }
+        $vitae->is_paid = 0;
+        $vitae->status  = 0;
+        $vitae->save();
+
+        $pg = new ToyyibPay();
+        $pg->setBillName('Payment for ' . $vitae->package);
+        $pg->setBillDescription(' ');
+        $pg->setAmount($vitae->price);
+        $pg->setReturnUrl(url('/'));
+        $pg->setBillTo($user->fullname);
+        $pg->setBillEmail($user->email);
+        $pg->setBillPhone($user->phone_no);
+        $billCode = $pg->createBill();
+
+        $vitae->bill_code = $billCode;
+        $vitae->save();
+
+        if (env('TOYYIBPAY_DEV') == 'yes') {
+            return redirect('https://dev.toyyibpay.com/' . $billCode);
+        }
+        else {
+            return redirect('https://toyyibpay.com/' . $billCode);
+        }
     }
 
     public function create()

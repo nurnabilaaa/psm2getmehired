@@ -8,33 +8,199 @@
                     List of Curriculum Vitae
                 </div>
                 <div class="card-body">
-                    <div class="text-right mb-3">
-                        <a href="javascript:void(0)" class="btn btn-primary" style="width: 150px" data-toggle="modal" data-target="#packageModal">Hired New Task</a>
+                    <div class="nav-tabs-boxed">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home" role="tab" aria-controls="home">Pickup CV</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#onworking" role="tab" aria-controls="home">On Working CV</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-controls="profile">Your CV</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home" role="tabpanel">
+                                <table class="table table-hover table-md">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 3%">#</th>
+                                        <th scope="col" style="width: 10%">Date</th>
+                                        <th scope="col" style="width: 27%">Customer Name</th>
+                                        <th scope="col" style="width: 20%">Email</th>
+                                        <th scope="col" style="width: 10%">Handphone No</th>
+                                        <th scope="col" style="width: 10%">Package</th>
+                                        <th scope="col" style="width: 10%">Status</th>
+                                        <th scope="col" style="width: 10%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($unpickCvs as $key => $cv)
+                                        <tr>
+                                            <td scope="row">
+                                                @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
+                                                    {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
+                                                @else
+                                                    {{ $key + 1 }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $cv->created_at->format('d M Y') }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->fullname }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->email }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->phone_no }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->package }}
+                                            </td>
+                                            <td>
+                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('pay-package/'.Auth::user()->id.'/CV Templates') }}" class="btn btn-primary btn-user btn-block">
+                                                    Pickup
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="onworking" role="tabpanel">
+                                <table class="table table-hover table-md">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 3%">#</th>
+                                        <th scope="col" style="width: 10%">Date</th>
+                                        <th scope="col" style="width: 27%">Customer Name</th>
+                                        <th scope="col" style="width: 20%">Email</th>
+                                        <th scope="col" style="width: 10%">Handphone No</th>
+                                        <th scope="col" style="width: 10%">Package</th>
+                                        <th scope="col" style="width: 10%">Status</th>
+                                        <th scope="col" style="width: 10%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($onWorkingCvs as $key => $cv)
+                                        <tr>
+                                            <td scope="row">
+                                                @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
+                                                    {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
+                                                @else
+                                                    {{ $key + 1 }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $cv->created_at->format('d M Y') }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->fullname }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->email }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->phone_no }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->package }}
+                                            </td>
+                                            <td>
+                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#finishModal">
+                                                    Finish
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="profile" role="tabpanel">
+                                <div class="text-right mb-3">
+                                    <a href="javascript:void(0)" class="btn btn-primary" style="width: 150px" data-toggle="modal" data-target="#packageModal">Hired New Task</a>
+                                </div>
+                                <table class="table table-hover table-md">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 3%">#</th>
+                                        <th scope="col" style="width: 10%">Date</th>
+                                        <th scope="col" style="width: 13%">Package</th>
+                                        <th scope="col" style="width: 13%">Status</th>
+                                        <th scope="col" style="width: 13%">Price</th>
+                                        <th scope="col" style="width: 13%">Payment Status</th>
+                                        <th scope="col" style="width: 13%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($cvs as $key => $cv)
+                                        <tr>
+                                            <td scope="row">
+                                                @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
+                                                    {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
+                                                @else
+                                                    {{ $key + 1 }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $cv->created_at->format('d M Y') }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->package }}
+                                            </td>
+                                            <td>
+                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                            </td>
+                                            <td>
+                                                {{ $cv->price }}
+                                            </td>
+                                            <td>
+                                                @if($cv->is_paid == 1) Paid @else Unpaid @endif
+                                            </td>
+                                            <td>
+                                                @if($cv->status == 0)
+                                                    <input id="cv" type="file" name="cv" hidden>
+                                                    <label for="cv" class="upload-label">Upload CV</label>
+                                                    <span id="file-chosen">No file chosen</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <table class="table table-responsive-sm table-hover table-outline mb-0">
-                        <thead class="thead-light">
-                        <tr>
-                            <th style="width: 40%">Curriculum Vitae</th>
-                            <th style="width: 25%">Date</th>
-                            <th style="width: 25%">Status</th>
-                            <th style="width: 10%"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Yiorgos Avraamu</td>
-                            <td>Yiorgos Avraamu</td>
-                            <td>Yiorgos Avraamu</td>
-                            <td></td>
-                        </tr>
-                        
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
     </div>
-    
+    <div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-info" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Updated CV</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <input id="cv" type="file" name="cv" hidden>
+                            <label for="cv" class="upload-label">Upload Updated CV</label>
+                            <span id="file-chosen">No file chosen</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button">Submit</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-info modal-lg" role="document">
             <div class="modal-content">

@@ -26,6 +26,7 @@ Route::match(['get', 'post'], 'password/reset/{token}', [UserController::class, 
 
 Route::group(array('middleware' => 'auth'), function () {
     Route::resource('curriculum_vitae', CurriculumVitaeController::class);
+    Route::get('pay-package/{userId}/{package}', [CurriculumVitaeController::class, 'pay']);
     Route::get('user/{for}', [UserController::class, 'index']);
     Route::get('user/create/{for}', [UserController::class, 'create']);
     Route::get('user/edit/{for}/{id}', [UserController::class, 'edit']);

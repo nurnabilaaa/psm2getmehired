@@ -43,8 +43,7 @@ class UserController extends Controller
     {
         if (request()->isMethod('get')) {
             return view('auth.register_customer');
-        }
-        else {
+        } else {
             request()->validate([
                                     'fullname' => 'required',
                                     'email'    => 'required:email',
@@ -74,8 +73,7 @@ class UserController extends Controller
             $vitae->package     = request()->get('package');
             if (request()->get('package') == 'CV Writing') {
                 $vitae->price = 80;
-            }
-            else {
+            } else {
                 $vitae->price = 50;
             }
             $vitae->is_paid = 0;
@@ -93,8 +91,7 @@ class UserController extends Controller
     {
         if (request()->isMethod('get')) {
             return view('auth.register_consultant');
-        }
-        else {
+        } else {
             request()->validate([
                                     'fullname' => 'required',
                                     'email'    => 'required:email',
@@ -152,8 +149,7 @@ class UserController extends Controller
 
         if (env('TOYYIBPAY_DEV') == 'yes') {
             return redirect('https://dev.toyyibpay.com/' . $billCode);
-        }
-        else {
+        } else {
             return redirect('https://toyyibpay.com/' . $billCode);
         }
     }
@@ -184,8 +180,7 @@ class UserController extends Controller
             }
 
             return view('auth.login', /*['paymentStatus' => $paymentStatus, 'paymentMsg' => $paymentMsg]*/);
-        }
-        else {
+        } else {
             $input = request()->all();
             $user  = Models\User::where('email', '=', $input['email'])->first();
 
@@ -199,8 +194,7 @@ class UserController extends Controller
                 }
 
                 return redirect()->intended('/');
-            }
-            else {
+            } else {
                 return redirect()->to('login')
                                  ->withInput(request()->except('password'))
                                  ->with('error', 'Invalid credentials');
@@ -212,8 +206,7 @@ class UserController extends Controller
     {
         if (request()->isMethod('get')) {
             return view('auth.lost_password');
-        }
-        else {
+        } else {
             $user = Models\User::where('email', '=', request()->input('email'))->first();
 
             if ($user == null) {
@@ -231,8 +224,7 @@ class UserController extends Controller
                 $user->save();
 
                 return redirect()->to('login')->with('success', 'Reset password instruction has been sent to your email');
-            }
-            else {
+            } else {
                 return redirect()->to('password/lost')->with('error', 'Your account is not active');
             }
         }
@@ -244,12 +236,10 @@ class UserController extends Controller
             $user = Models\User::where('reset_password_token', $token)->first();
             if ($user) {
                 return view('auth.reset_password', ['user' => $user]);
-            }
-            else {
+            } else {
                 return redirect()->to('login')->with('error', 'Invalid token');
             }
-        }
-        else {
+        } else {
             request()->validate(['password' => 'required|confirmed|min:6']);
             $user                       = Models\User::where('reset_password_token', $token)->first();
             $user->reset_password_token = null;
@@ -262,6 +252,19 @@ class UserController extends Controller
 
     public function dashboard()
     {
+        if (request()->get('billcode') != null && request()->get('status_id') != null) {
+            $vitae          = Models\CurriculumVitae::where('bill_code', request()->get('billcode'))->get()->first();
+            $vitae->is_paid = request()->get('status_id');
+            $vitae->save();
+//                if (request()->get('status_id') == 1) {
+//                    $paymentMsg = 'Thanks for your payment, please login after activation';
+//                }
+//                elseif (request()->get('status_id') == 3) {
+//                    $paymentStatus = 'failed';
+//                    $paymentMsg    = 'Payment failed. Try to resubmit a payment after login. Please activate your account first';
+//                }
+        }
+
         $data = [
             'menu' => ['menu' => 'Home', 'subMenu' => ''],
         ];
@@ -275,11 +278,17 @@ class UserController extends Controller
             $data['totalConsultant'] = Models\VWUsers::selectRaw('COUNT(*) as total')->where('role', 'consultant')->get()->first();
             $data['totalIncome']     = Models\CurriculumVitae::selectRaw('SUM(price) as total')->get()->first();
             return view('dashboard.admin', $data);
-        }
-        elseif (Auth::user()->hasRole('consultant')) {
+        } elseif (Auth::user()->hasRole('consultant')) {
+            $data['cvs']          = Models\VWCurriculumVitae::where('customer_id', Auth::user()->id)->get();
+            $data['unpickCvs']    = Models\VWCurriculumVitae::where('status', 1)->orderBy('created_at')->get();
+            $data['onWorkingCvs'] = Models\VWCurriculumVitae::where('status', 2)
+                                                            ->where('consultant_id', auth()->user()->id)
+                                                            ->orderBy('created_at')->get();
+
             return view('dashboard.consultant', $data);
-        }
-        else {
+        } else {
+            $data['cvs'] = Models\VWCurriculumVitae::where('customer_id', Auth::user()->id)->get();
+
             return view('dashboard.customer', $data);
         }
     }
