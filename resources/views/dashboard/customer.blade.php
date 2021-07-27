@@ -7,59 +7,60 @@
                 <div class="card-header">
                     List of Curriculum Vitae
                 </div>
-            <div class="card-body">
-                <div class="text-right mb-3">
-                    <a href="javascript:void(0)" class="btn btn-primary" style="width: 150px" data-toggle="modal" data-target="#packageModal">Hired New Task</a>
-                </div>
-                <table class="table table-hover table-md">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 3%">#</th>
-                        <th scope="col" style="width: 10%">Date</th>
-                        <th scope="col" style="width: 13%">Package</th>
-                        <th scope="col" style="width: 13%">Status</th>
-                        <th scope="col" style="width: 13%">Price</th>
-                        <th scope="col" style="width: 13%">Payment Status</th>
-                        <th scope="col" style="width: 13%"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($cvs as $key => $cv)
+                <div class="card-body">
+                    <div class="text-right mb-3">
+                        <a href="javascript:void(0)" class="btn btn-primary" style="width: 150px" data-toggle="modal" data-target="#packageModal">Hired New Task</a>
+                    </div>
+                    <table class="table table-hover table-md">
+                        <thead>
                         <tr>
-                            <td scope="row">
-                                @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
-                                    {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
-                                @else
-                                    {{ $key + 1 }}
-                                @endif
-                            </td>
-                            <td>
-                                {{ $cv->created_at->format('d M Y') }}
-                            </td>
-                            <td>
-                                {{ $cv->package }}
-                            </td>
-                            <td>
-                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
-                            </td>
-                            <td>
-                                {{ $cv->price }}
-                            </td>
-                            <td>
-                                @if($cv->is_paid == 1) Paid @else Unpaid @endif
-                            </td>
-                            <td>
-                                @if($cv->status == 0)
-                                    <input id="cv" type="file" name="cv" hidden>
-                                    <label for="cv" class="upload-label">Upload CV</label>
-                                    <span id="file-chosen">No file chosen</span>
-                                @endif
-                            </td>
+                            <th scope="col" style="width: 3%">#</th>
+                            <th scope="col" style="width: 10%">Date</th>
+                            <th scope="col" style="width: 13%">Package</th>
+                            <th scope="col" style="width: 13%">Status</th>
+                            <th scope="col" style="width: 13%">Price</th>
+                            <th scope="col" style="width: 13%">Payment Status</th>
+                            <th scope="col" style="width: 13%"></th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                        @foreach ($cvs as $key => $cv)
+                            <tr>
+                                <td scope="row">
+                                    @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
+                                        {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
+                                    @else
+                                        {{ $key + 1 }}
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $cv->created_at->format('d M Y') }}
+                                </td>
+                                <td>
+                                    {{ $cv->package }}
+                                </td>
+                                <td>
+                                    @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3)
+                                        Finish @endif
+                                </td>
+                                <td>
+                                    {{ $cv->price }}
+                                </td>
+                                <td>
+                                    @if($cv->is_paid == 1) Paid @else Unpaid @endif
+                                </td>
+                                <td>
+                                    @if($cv->status == 0)
+                                        <input id="cv" type="file" name="cv" hidden>
+                                        <label for="cv" class="upload-label">Upload CV</label>
+                                        <span id="file-chosen">No file chosen</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -127,3 +128,26 @@
         </div>
     </div>
 @stop
+
+@section('page-script')
+    <script>
+        $(document).ready(function () {
+            $('#cv').on('change', function(){
+                var formData = new FormData();
+                formData.append('file', $(this)[0].files[0]);
+
+                $.ajax({
+                    url : 'upload.php',
+                    type : 'POST',
+                    data : formData,
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false,  // tell jQuery not to set contentType
+                    success : function(data) {
+                        console.log(data);
+                        alert(data);
+                    }
+                });
+            });
+        });
+    </script>
+@append

@@ -57,23 +57,25 @@
                                         </div>
                                     </div>
                                 @endif
-                                <div class="form-group row">
-                                    <label class="col-md-2 col-form-label" for="department_id">User Status</label>
-                                    <div class="col-md-7">
-                                        <div class="col-md-9 col-form-label">
-                                            <div class="form-check form-check-inline mr-1">
-                                                <input class="form-check-input" id="enable-1" type="radio" value="1" name="enable"
-                                                       @if($user->enable == 1) checked @endif>
-                                                <label class="form-check-label" for="enable-1">Enable</label>
-                                            </div>
-                                            <div class="form-check form-check-inline mr-1">
-                                                <input class="form-check-input" id="enable-2" type="radio" value="0" name="enable"
-                                                       @if($user->enable != 1) checked @endif>
-                                                <label class="form-check-label" for="enable-2">Disable</label>
+                                @if (isset($user))
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label" for="department_id">User Status</label>
+                                        <div class="col-md-7">
+                                            <div class="col-md-9 col-form-label">
+                                                <div class="form-check form-check-inline mr-1">
+                                                    <input class="form-check-input" id="enable-1" type="radio" value="1" name="enable"
+                                                           @if($user->enable == 1) checked @endif>
+                                                    <label class="form-check-label" for="enable-1">Enable</label>
+                                                </div>
+                                                <div class="form-check form-check-inline mr-1">
+                                                    <input class="form-check-input" id="enable-2" type="radio" value="0" name="enable"
+                                                           @if($user->enable != 1) checked @endif>
+                                                    <label class="form-check-label" for="enable-2">Disable</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                                 @if (!isset($user))
                                     <div class="form-group row">
                                         <label class="col-md-2 col-form-label" for="work_no">Password</label>
