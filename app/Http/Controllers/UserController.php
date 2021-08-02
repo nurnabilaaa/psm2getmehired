@@ -315,6 +315,43 @@ class UserController extends Controller
         return view('user.form', $data);
     }
 
+    public function update($for, $id)
+    {
+        $user = Models\User::find($id);
+        $user->email             = request()->get('email');
+        $user->password          = \Hash::make(request()->get('password'));
+        $user->fullname          = strtoupper(request()->get('fullname'));
+        $user->phone_no          = request()->get('phone_no');
+        $user->phone_no          = str_replace('-', '', $user->phone_no);
+        $user->phone_no          = str_replace('+6', '', $user->phone_no);
+        $user->phone_no          = str_replace('+', '', $user->phone_no);
+        $user->phone_no          = str_replace(' ', '', $user->phone_no);
+        $user->save();
+
+        return view('user.form', $data);
+    }
+
+    public function profile()
+    {
+        $data = [
+            'menu' => ['menu' => 'Home', 'subMenu' => ''],
+            'user' => Auth::user(),
+        ];
+
+        return view('user.profile', $data);
+    }
+
+    public function editProfile()
+    {
+        $data = [
+            'menu' => ['menu' => 'Home', 'subMenu' => ''],
+            'user' => Auth::user(),
+            'for'  => 'Profile'
+        ];
+
+        return view('user.form', $data);
+    }
+
     public function logout()
     {
         \Auth::logout();

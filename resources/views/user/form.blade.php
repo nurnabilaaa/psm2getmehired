@@ -2,16 +2,16 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
-                <div class="card-header">
-                    @if (isset($user)) Update @else Add @endif {{ ucfirst($for) }}
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{  isset($user) ? url('user/update/' . $user->id) : url('user/store') }}" id="form-doctor"
-                          enctype="multipart/form-data"
-                          novalidate>
-                        @csrf
-                        @if (isset($user)) @method('PUT') @endif
+            <form method="POST" action="{{  isset($user) ? url('user/update/' . $user->id) : url('user/store') }}" id="form-doctor"
+                  enctype="multipart/form-data"
+                  novalidate>
+                @csrf
+                @if (isset($user)) @method('PUT') @endif
+                <div class="card card-primary">
+                    <div class="card-header">
+                        @if (isset($user)) Update @else Add @endif {{ ucfirst($for) }}
+                    </div>
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -57,7 +57,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                @if (isset($user))
+                                @if (isset($user) && $user->id != Auth::user()->id)
                                     <div class="form-group row">
                                         <label class="col-md-2 col-form-label" for="department_id">User Status</label>
                                         <div class="col-md-7">
@@ -92,16 +92,17 @@
                                 @endif
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="card-footer text-right">
+                        <a href="{{ url('user/' . $for) }}" class="btn btn-ghost-danger">Cancel</a>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Save
+                        </button>
+                    </div>
                 </div>
-                <div class="card-footer text-right">
-                    <a href="{{ url('user/' . $for) }}" class="btn btn-ghost-danger">Cancel</a>
-                    <button type="submit" class="btn btn-sm btn-primary">
-                        Save
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
+    </div>
     </div>
 @stop
 

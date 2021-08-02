@@ -25,6 +25,8 @@ Route::match(['get', 'post'], 'password/lost', [UserController::class, 'lostPass
 Route::match(['get', 'post'], 'password/reset/{token}', [UserController::class, 'newPassword']);
 
 Route::group(array('middleware' => 'auth'), function () {
+    Route::get("profile", [UserController::class, 'profile']);
+    Route::get("profile/edit", [UserController::class, 'editProfile']);
     Route::resource('curriculum_vitae', CurriculumVitaeController::class);
     Route::get('pay-package/{userId}/{package}', [CurriculumVitaeController::class, 'pay']);
     Route::get('user/{for}', [UserController::class, 'index']);
