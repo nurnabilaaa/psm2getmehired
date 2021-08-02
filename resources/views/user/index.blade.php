@@ -45,6 +45,7 @@
                         <th scope="col" style="width: 28%">@sortablelink('fullname','Fullname')</th>
                         <th scope="col" style="width: 11%">@sortablelink('email','Email')</th>
                         <th scope="col" style="width: 11%">@sortablelink('phone_no','Handphone No')</th>
+                        <th scope="col" style="width: 11%;color: #20a8d8">CV</th>
                         <th scope="col" style="width: 11%">@sortablelink('status','Status')</th>
                         <th scope="col" style="width: 9%">&nbsp;</th>
                     </tr>
@@ -67,6 +68,11 @@
                             </td>
                             <td>
                                 {{ $user->phone_no }}
+                            </td>
+                            <td>
+                                @if($user->cv_filename != null)
+                                    <a href="{{ url('cv/' . $user->cv_filename) }}" target="_blank">Show CV</a>
+                                @endif
                             </td>
                             <td>
                                 @if($user->enable) Enable @else Disabled @endif
@@ -108,7 +114,7 @@
             </div>
         </div>
     </div>
-    
+
     <form id="form-delete" method="post">
         <input type="hidden" name="_method"/>
         <input type="hidden" name="_token">

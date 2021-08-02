@@ -12,6 +12,7 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home" role="tab" aria-controls="home">Pickup CV</a></li>
                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#onworking" role="tab" aria-controls="home">On Working CV</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#finish" role="tab" aria-controls="home">Finish CV</a></li>
                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-controls="profile">Your CV</a></li>
                         </ul>
                         <div class="tab-content">
@@ -21,10 +22,11 @@
                                     <tr>
                                         <th scope="col" style="width: 3%">#</th>
                                         <th scope="col" style="width: 10%">Date</th>
-                                        <th scope="col" style="width: 27%">Customer Name</th>
-                                        <th scope="col" style="width: 20%">Email</th>
+                                        <th scope="col" style="width: 22%">Customer Name</th>
+                                        <th scope="col" style="width: 15%">Email</th>
                                         <th scope="col" style="width: 10%">Handphone No</th>
                                         <th scope="col" style="width: 10%">Package</th>
+                                        <th scope="col" style="width: 10%">CV</th>
                                         <th scope="col" style="width: 10%">Status</th>
                                         <th scope="col" style="width: 10%"></th>
                                     </tr>
@@ -55,10 +57,19 @@
                                                 {{ $cv->package }}
                                             </td>
                                             <td>
-                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                                @if($cv->cv_origin_filename != null)
+                                                    <a href="{{ url('cv/' . $cv->cv_origin_filename) }}" target="_blank">Show CV</a>
+                                                @endif
                                             </td>
                                             <td>
-                                                <a href="{{ url('pay-package/'.Auth::user()->id.'/CV Templates') }}" class="btn btn-primary btn-user btn-block">
+                                                @if($cv->status == 0) Not Upload
+                                                @elseif($cv->status == 1) Not Pickup
+                                                @elseif($cv->status == 2) On Progress
+                                                @elseif($cv->status == 3) Finish
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('curriculum-vitae/pickup/' . $cv->id) }}" class="btn btn-primary btn-user btn-block">
                                                     Pickup
                                                 </a>
                                             </td>
@@ -73,10 +84,11 @@
                                     <tr>
                                         <th scope="col" style="width: 3%">#</th>
                                         <th scope="col" style="width: 10%">Date</th>
-                                        <th scope="col" style="width: 27%">Customer Name</th>
-                                        <th scope="col" style="width: 20%">Email</th>
+                                        <th scope="col" style="width: 22%">Customer Name</th>
+                                        <th scope="col" style="width: 15%">Email</th>
                                         <th scope="col" style="width: 10%">Handphone No</th>
                                         <th scope="col" style="width: 10%">Package</th>
+                                        <th scope="col" style="width: 10%">CV</th>
                                         <th scope="col" style="width: 10%">Status</th>
                                         <th scope="col" style="width: 10%"></th>
                                     </tr>
@@ -107,12 +119,83 @@
                                                 {{ $cv->package }}
                                             </td>
                                             <td>
-                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                                @if($cv->cv_origin_filename != null)
+                                                    <a href="{{ url('cv/' . $cv->cv_origin_filename) }}" target="_blank">Show CV</a>
+                                                @endif
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0)" class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#finishModal">
+                                                @if($cv->status == 0) Not Upload
+                                                @elseif($cv->status == 1) Not Pickup
+                                                @elseif($cv->status == 2) On Progress
+                                                @elseif($cv->status == 3) Finish
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-user btn-block finish-btn" data-id="{{ $cv->id }}">
                                                     Finish
                                                 </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="finish" role="tabpanel">
+                                <table class="table table-hover table-md">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 3%">#</th>
+                                        <th scope="col" style="width: 10%">Date</th>
+                                        <th scope="col" style="width: 22%">Customer Name</th>
+                                        <th scope="col" style="width: 15%">Email</th>
+                                        <th scope="col" style="width: 10%">Handphone No</th>
+                                        <th scope="col" style="width: 10%">Package</th>
+                                        <th scope="col" style="width: 15%">CV</th>
+                                        <th scope="col" style="width: 10%">Status</th>
+                                        <th scope="col" style="width: 5%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($finishCvs as $key => $cv)
+                                        <tr>
+                                            <td scope="row">
+                                                @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
+                                                    {{ (\Request::get('perPage') * (\Request::get('page') - 1)) + ($key + 1) }}
+                                                @else
+                                                    {{ $key + 1 }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $cv->created_at->format('d M Y') }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->fullname }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->email }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->phone_no }}
+                                            </td>
+                                            <td>
+                                                {{ $cv->package }}
+                                            </td>
+                                            <td>
+                                                @if($cv->cv_origin_filename != null)
+                                                    <a href="{{ url('cv/' . $cv->cv_origin_filename) }}" target="_blank">Oroginal CV</a>
+                                                @endif
+                                                @if($cv->cv_modified_filename != null)
+                                                    | <a href="{{ url('cv/' . $cv->cv_modified_filename) }}" target="_blank">Modified CV</a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($cv->status == 0) Not Upload
+                                                @elseif($cv->status == 1) Not Pickup
+                                                @elseif($cv->status == 2) On Progress
+                                                @elseif($cv->status == 3) Finish
+                                                @endif
+                                            </td>
+                                            <td>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -152,7 +235,8 @@
                                                 {{ $cv->package }}
                                             </td>
                                             <td>
-                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On
+                                                Progress @elseif($cv->status == 3) Finish @endif
                                             </td>
                                             <td>
                                                 {{ $cv->price }}
@@ -180,25 +264,28 @@
     </div>
     <div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-info" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Upload Updated CV</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <input id="cv" type="file" name="cv" hidden>
-                            <label for="cv" class="upload-label">Upload Updated CV</label>
-                            <span id="file-chosen">No file chosen</span>
+            <form method="POST" action="{{ url('curriculum-vitae/finish') }}" id="form-finish" enctype="multipart/form-data" novalidate>
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Updated CV</h4>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <input id="cv" type="file" name="cv" hidden>
+                                <label for="cv" class="upload-label">Upload Updated CV</label>
+                                <span id="file-chosen">No file chosen</span>
+                            </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="button">Submit</button>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -250,3 +337,15 @@
         </div>
     </div>
 @stop
+
+@section('page-script')
+    <script>
+        $(document).ready(function () {
+            $('.finish-btn').on('click', function () {
+                console.log(1);
+                $('#form-finish').attr('action', '{{ url('curriculum-vitae/finish') }}/' + $(this).attr('data-id'));
+                $('#finishModal').modal('show');
+            })
+        });
+    </script>
+@append

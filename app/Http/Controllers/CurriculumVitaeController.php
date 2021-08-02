@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libs\ToyyibPay;
 use Illuminate\Http\Request;
 use App\Models;
+use Ramsey\Uuid\Uuid;
 
 class CurriculumVitaeController extends Controller
 {
@@ -112,5 +113,45 @@ class CurriculumVitaeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function uploadCV($id)
+    {
+        $cv = Models\CurriculumVitae::find($id);
+
+        $fileBase = request()->file('cv');
+        $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
+        $fileBase->move(public_path('cv'), $newName);
+
+        $cv->cv_origin_filename = $newName;
+        $cv->status = 1;
+        $cv->save();
+
+        return redirect()->back()->with('success', 'Your CV has been upload');
+    }
+
+    public function pickupCV($id)
+    {
+        $cv = Models\CurriculumVitae::find($id);
+        $cv->status = 2;
+        $cv->consultant_id = \Auth::user()->id;
+        $cv->save();
+
+        return redirect()->back()->with('success', 'CV has been pickup');
+    }
+
+    public function finishCV($id)
+    {
+        $cv = Models\CurriculumVitae::find($id);
+
+        $fileBase = request()->file('cv');
+        $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
+        $fileBase->move(public_path('cv'), $newName);
+
+        $cv->cv_modified_filename = $newName;
+        $cv->status = 3;
+        $cv->save();
+
+        return redirect()->back()->with('success', 'Thanks for your contribution');
     }
 }

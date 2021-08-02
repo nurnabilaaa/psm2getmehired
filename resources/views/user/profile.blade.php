@@ -27,7 +27,7 @@
                             </dl>
                             <div class="text-right">
                                 <button type="button" class="btn btn-sm btn-primary" style="height: 33px"
-                                        onclick="location.href = '{{ URL::to('profile/edit') }}';">
+                                        onclick="location.href = '{{ URL::to('user/edit/profile/' . Auth::user()->id) }}';">
                                     Update
                                 </button>
                             </div>

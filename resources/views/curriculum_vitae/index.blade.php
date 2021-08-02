@@ -58,7 +58,11 @@
                                 {{ $cv->package }}
                             </td>
                             <td>
-                                @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3) Finish @endif
+                                @if($cv->status == 0) Not Upload
+                                @elseif($cv->status == 1) Not Pickup
+                                @elseif($cv->status == 2) On Progress
+                                @elseif($cv->status == 3) Finish
+                                @endif
                             </td>
                         </tr>
                     @endforeach

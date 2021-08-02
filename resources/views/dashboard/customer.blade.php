@@ -40,7 +40,13 @@
                                     {{ $cv->package }}
                                 </td>
                                 <td>
-                                    @if($cv->status == 0) Not Upload @elseif($cv->status == 1) Not Pickup @elseif($cv->status == 2) On Progress @elseif($cv->status == 3)
+                                    @if($cv->status == 0)
+                                        Not Upload
+                                    @elseif($cv->status == 1)
+                                        Not Pickup
+                                    @elseif($cv->status == 2)
+                                        On Progress
+                                    @elseif($cv->status == 3)
                                         Finish @endif
                                 </td>
                                 <td>
@@ -50,8 +56,28 @@
                                     @if($cv->is_paid == 1) Paid @else Unpaid @endif
                                 </td>
                                 <td>
-                                    @if($cv->status == 0)
-                                        <input id="cv" type="file" name="cv" hidden>
+                                    @if($cv->is_paid == 0)
+                                        @if (env('TOYYIBPAY_DEV') == 'yes')
+                                            <a href="{{ 'https://dev.toyyibpay.com/' . $cv->bill_code }}" class="btn btn-primary btn-sm" target="_blank">Pay</a>
+                                        @else
+                                            <a href="{{ 'https://toyyibpay.com/' . $cv->bill_code }}" class="btn btn-primary btn-sm" target="_blank">Pay</a>
+                                        @endif
+                                    @endif
+                                    @if($cv->status == 1 || $cv->status == 2)
+                                        @if($cv->cv_origin_filename != null)
+                                            <a href="{{ url('cv/' . $cv->cv_origin_filename) }}" target="_blank">Show CV</a>
+                                        @endif
+                                    @endif
+                                    @if($cv->status == 3)
+                                        @if($cv->cv_origin_filename != null)
+                                            <a href="{{ url('cv/' . $cv->cv_origin_filename) }}" target="_blank">Original CV</a>
+                                        @endif
+                                        @if($cv->cv_modified_filename != null)
+                                            | <a href="{{ url('cv/' . $cv->cv_modified_filename) }}" target="_blank">Modified CV</a>
+                                        @endif
+                                    @endif
+                                    @if($cv->is_paid == 1 && $cv->status == 0)
+                                        <input id="cv" type="file" name="cv" hidden data-id="{{ $cv->id }}">
                                         <label for="cv" class="upload-label">Upload CV</label>
                                         <span id="file-chosen">No file chosen</span>
                                     @endif
@@ -64,7 +90,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-info modal-lg" role="document">
             <div class="modal-content">
@@ -132,19 +158,27 @@
 @section('page-script')
     <script>
         $(document).ready(function () {
-            $('#cv').on('change', function(){
+            $('#cv').on('change', function () {
+                let id = $(this).attr('data-id');
                 var formData = new FormData();
-                formData.append('file', $(this)[0].files[0]);
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+                formData.append('cv', $(this)[0].files[0]);
 
                 $.ajax({
-                    url : 'upload.php',
-                    type : 'POST',
-                    data : formData,
+                    url: '{{ url('curriculum-vitae/upload') }}/' + id,
+                    type: 'POST',
+                    data: formData,
                     processData: false,  // tell jQuery not to process the data
                     contentType: false,  // tell jQuery not to set contentType
-                    success : function(data) {
-                        console.log(data);
-                        alert(data);
+                    success: function (data) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'CV has been uploaded',
+                            position: 'top-center',
+                            stack: false,
+                            showHideTransition: 'slide',
+                            icon: 'success'
+                        })
                     }
                 });
             });

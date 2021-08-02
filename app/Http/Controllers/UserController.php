@@ -122,8 +122,8 @@ class UserController extends Controller
             $user->consultant_status = 0;
             $user->save();
 
-//            $consultantRole = Models\Role::where('name', 'consultant')->first();
-//            $user->attachRole($consultantRole);
+            $consultantRole = Models\Role::where('name', 'consultant')->first();
+            $user->attachRole($consultantRole);
 
             return redirect()->to('login')->with('success', 'Your request is being viewed. We will notify you soon.');
         }
@@ -284,6 +284,9 @@ class UserController extends Controller
             $data['onWorkingCvs'] = Models\VWCurriculumVitae::where('status', 2)
                                                             ->where('consultant_id', auth()->user()->id)
                                                             ->orderBy('created_at')->get();
+            $data['finishCvs'] = Models\VWCurriculumVitae::where('status', 3)
+                                                            ->where('consultant_id', auth()->user()->id)
+                                                            ->orderBy('created_at')->get();
 
             return view('dashboard.consultant', $data);
         } else {
@@ -305,6 +308,12 @@ class UserController extends Controller
 
     public function edit($for, $id)
     {
+        if ($for == 'profile') {
+            if (Auth::user()->id != $id) {
+                return redirect()->to('profile')->with('error', 'Not your profile!');
+            }
+        }
+
         $user = Models\User::find($id);
         $data = [
             'menu' => ['menu' => $for, 'subMenu' => ''],
@@ -317,18 +326,29 @@ class UserController extends Controller
 
     public function update($for, $id)
     {
-        $user = Models\User::find($id);
-        $user->email             = request()->get('email');
-        $user->password          = \Hash::make(request()->get('password'));
-        $user->fullname          = strtoupper(request()->get('fullname'));
-        $user->phone_no          = request()->get('phone_no');
-        $user->phone_no          = str_replace('-', '', $user->phone_no);
-        $user->phone_no          = str_replace('+6', '', $user->phone_no);
-        $user->phone_no          = str_replace('+', '', $user->phone_no);
-        $user->phone_no          = str_replace(' ', '', $user->phone_no);
+        $user           = Models\User::find($id);
+        $user->email    = request()->get('email');
+        $user->fullname = strtoupper(request()->get('fullname'));
+        $user->phone_no = request()->get('phone_no');
+        $user->phone_no = str_replace('-', '', $user->phone_no);
+        $user->phone_no = str_replace('+6', '', $user->phone_no);
+        $user->phone_no = str_replace('+', '', $user->phone_no);
+        $user->phone_no = str_replace(' ', '', $user->phone_no);
+
+        if ($for == 'consultant') {
+            $user->consultant_status = request()->get('consultant_status');
+            $user->enable            = request()->get('enable');
+        } elseif ($for == 'customer') {
+            $user->enable            = request()->get('enable');
+        }
+
         $user->save();
 
-        return view('user.form', $data);
+        if ($for == 'profile') {
+            return redirect()->to('profile')->with('success', 'Your profile has been updated');
+        } else {
+            return redirect()->to('user/' . $for)->with('success', 'User has been updated');
+        }
     }
 
     public function profile()
@@ -341,15 +361,27 @@ class UserController extends Controller
         return view('user.profile', $data);
     }
 
-    public function editProfile()
+    public function changePassword()
     {
-        $data = [
-            'menu' => ['menu' => 'Home', 'subMenu' => ''],
-            'user' => Auth::user(),
-            'for'  => 'Profile'
-        ];
+        if (\Request::isMethod('get')) {
+            $data = [
+                'menu' => ['menu' => 'Home', 'subMenu' => ''],
+            ];
+            return view('user.change_password', $data);
+        } else {
+            request()->validate(['password' => 'required|confirmed|min:6']);
 
-        return view('user.form', $data);
+            $user = Models\User::find(\Auth::user()->id);
+
+            if (!\Hash::check(request()->get('old_password'), $user->password)) {
+                return redirect()->to('password')->with('error', 'Invalid old password');
+            } else {
+                $user->password = \Hash::make(request()->get('password'));
+                $user->save();
+
+                return redirect()->to('password')->with('success', 'Password has been change.');
+            }
+        }
     }
 
     public function logout()

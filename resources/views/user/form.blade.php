@@ -2,11 +2,10 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <form method="POST" action="{{  isset($user) ? url('user/update/' . $user->id) : url('user/store') }}" id="form-doctor"
+            <form method="POST" action="{{  isset($user) ? url('user/update/' . $for . '/' . $user->id) : url('user/store') }}" id="form-doctor"
                   enctype="multipart/form-data"
                   novalidate>
                 @csrf
-                @if (isset($user)) @method('PUT') @endif
                 <div class="card card-primary">
                     <div class="card-header">
                         @if (isset($user)) Update @else Add @endif {{ ucfirst($for) }}

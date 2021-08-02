@@ -34,6 +34,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/cropper.min.css') }}">
     <link href="{{ asset('css/free-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery.toast.min.css') }}" rel="stylesheet">
     @yield("page-css")
 </head>
 
@@ -88,7 +89,7 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Curriculum Vitae') echo 'c-active' @endphp" href="{{ route('curriculum_vitae.index') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'Curriculum Vitae') echo 'c-active' @endphp" href="{{ route('curriculum-vitae.index') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-description') }}"></use>
                     </svg>
@@ -245,6 +246,7 @@
 <script src="{{ asset('js/clipboard.min.js') }}"></script>
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/jquery.toast.min.js') }}"></script>
 <!--[if IE]><!-->
 <script src="{{ asset('js/svgxuse.min.js') }}"></script>
 <!--<![endif]-->
@@ -259,22 +261,16 @@
     ?>
     <script type="text/javascript">
         $(document).ready(function () {
-            var a = '{{ $a }}'
-            $(" #toastContainer").dxToast({
-                message: a,
-                type: "error",
-                width: 320,
-                position: {
-                    my: "right",
-                    at: "top right",
-                    offset: '-15 80',
-                    of: ".c-header"
-                },
-                displayTime: 10000
-            });
-            $("#toastContainer").dxToast("show");
+            $.toast({
+                heading: 'Success',
+                text: '{{ $a }}',
+                position: 'top-center',
+                stack: false,
+                showHideTransition: 'slide',
+                icon: 'error'
+            })
         })
-    
+
     </script>
 @endif
 
@@ -282,21 +278,16 @@
     @php $a = Session::get('error'); @endphp
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#toastContainer").dxToast({
-                message: '{{ $a }}',
-                type: "error",
-                width: 320,
-                position: {
-                    my: "right",
-                    at: "top right",
-                    offset: '-15 80',
-                    of: ".c-header"
-                },
-                displayTime: 5000
-            });
-            $("#toastContainer").dxToast("show");
+            $.toast({
+                heading: 'Error',
+                text: '{{ $a }}',
+                position: 'top-center',
+                stack: false,
+                showHideTransition: 'slide',
+                icon: 'error'
+            })
         })
-    
+
     </script>
 @endif
 
@@ -304,21 +295,16 @@
     @php $a = Session::get('success'); @endphp
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#toastContainer").dxToast({
-                message: '{{ $a }}',
-                type: "success",
-                width: 340,
-                position: {
-                    my: "right",
-                    at: "top right",
-                    offset: '-15 80',
-                    of: ".c-header"
-                },
-                displayTime: 5000,
-            });
-            $("#toastContainer").dxToast('instance').show();
+            $.toast({
+                heading: 'Success',
+                text: '{{ $a }}',
+                position: 'top-center',
+                stack: false,
+                showHideTransition: 'slide',
+                icon: 'success'
+            })
         })
-    
+
     </script>
 @endif
 <script>
