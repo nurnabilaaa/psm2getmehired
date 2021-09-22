@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Libs\ToyyibPay;
 use App\Models;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
 class AnnouncementController extends Controller
@@ -24,64 +22,27 @@ class AnnouncementController extends Controller
 
     public function index()
     {
-        $perPage = request()->get('perPage') != null ? request()->get('perPage') : 10;
-        $keyword = request()->get('q');
-        $cvs     = null;
+        $perPage       = request()->get('perPage') != null ? request()->get('perPage') : 10;
+        $keyword       = request()->get('q');
+        $announcements = null;
         if (\Laratrust::hasRole('admin')) {
-            $cvs = Models\VWCurriculumVitae::where(function ($query) use ($keyword) {
+            $announcements = Models\Announcement::where(function ($query) use ($keyword) {
                 if ($keyword) {
-                    $query->whereRaw('`email` LIKE "%' . $keyword . '%"
-                    OR `fullname` LIKE "%' . $keyword . '%"
-                    OR `phone_no` LIKE "%' . $keyword . '%"
-                    OR `package` LIKE "%' . $keyword . '%"
-                    OR `status` LIKE "%' . $keyword . '%"
+                    $query->whereRaw('`title` LIKE "%' . $keyword . '%"
+                    OR `content_type` LIKE "%' . $keyword . '%"
+                    OR `content_body` LIKE "%' . $keyword . '%"
+                    OR `expired_at` LIKE "%' . $keyword . '%"
                     ');
                 }
-            })->sortable(['created_at' => 'asc'])->paginate($perPage);
+            })->sortable(['expired_at' => 'desc'])->paginate($perPage);
         }
 
         $data = [
-            'menu' => ['menu' => 'CurriculumVitae', 'subMenu' => ''],
-            'cvs'  => $cvs
+            'menu'          => ['menu' => 'announcement', 'subMenu' => ''],
+            'announcements' => $announcements
         ];
 
         return view('announcement.index', $data);
-    }
-
-    public function pay($userId, $package)
-    {
-        $user = Models\User::find($userId);
-
-        $vitae              = new Models\CurriculumVitae();
-        $vitae->customer_id = $user->id;
-        $vitae->package     = $package;
-        if ($package == 'CV Writing') {
-            $vitae->price = 80;
-        } else {
-            $vitae->price = 50;
-        }
-        $vitae->is_paid = 0;
-        $vitae->status  = 0;
-        $vitae->save();
-
-        $pg = new ToyyibPay();
-        $pg->setBillName('Payment for ' . $vitae->package);
-        $pg->setBillDescription(' ');
-        $pg->setAmount($vitae->price);
-        $pg->setReturnUrl(url('/'));
-        $pg->setBillTo($user->fullname);
-        $pg->setBillEmail($user->email);
-        $pg->setBillPhone($user->phone_no);
-        $billCode = $pg->createBill();
-
-        $vitae->bill_code = $billCode;
-        $vitae->save();
-
-        if (env('TOYYIBPAY_DEV') == 'yes') {
-            return redirect('https://dev.toyyibpay.com/' . $billCode);
-        } else {
-            return redirect('https://toyyibpay.com/' . $billCode);
-        }
     }
 
     public function create()
@@ -97,12 +58,13 @@ class AnnouncementController extends Controller
     {
         if (request()->get('content_type') == 'text') {
             request()->validate([
-                                    'title'         => 'required',
-                                    'content_type'  => 'required',
-                                    'expired_at'    => 'required',
-                                    'content_text'  => 'required',
+                                    'title'        => 'required',
+                                    'content_type' => 'required',
+                                    'expired_at'   => 'required',
+                                    'content_text' => 'required',
                                 ]);
-        } else {
+        }
+        else {
             request()->validate([
                                     'title'         => 'required',
                                     'content_type'  => 'required',
@@ -110,21 +72,26 @@ class AnnouncementController extends Controller
                                     'content_image' => 'required',
                                 ]);
         }
+
         $announcement               = new Models\Announcement();
         $announcement->title        = request()->get('title');
         $announcement->content_type = request()->get('content_type');
-        $announcement->expired_at   = date('Y-m-d', strtotime(request()->get('phone_no')));
+        $announcement->expired_at   = date('Y-m-d', strtotime(request()->get('expired_at')));
+        $announcement->announce_by  = \Auth::user()->id;
 
-        if ($for == 'consultant') {
-            $announcement->consultant_status = request()->get('consultant_status');
-            $announcement->enable            = request()->get('enable');
-        } elseif ($for == 'customer') {
-            $announcement->enable = request()->get('enable');
+        if (request()->get('content_type') == 'text') {
+            $announcement->content_body = request()->get('content_text');
+        }
+        else {
+            $fileBase = request()->file('content_image');
+            $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
+            $fileBase->move(public_path('images' . DIRECTORY_SEPARATOR . 'announcement'), $newName);
+            $announcement->content_body = $newName;
         }
 
         $announcement->save();
 
-        return redirect()->to('profile')->with('success', 'Your profile has been updated');
+        return redirect()->to('announcement')->with('success', 'Announcement has been created');
     }
 
     public function show($id)

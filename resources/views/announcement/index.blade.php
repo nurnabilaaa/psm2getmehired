@@ -29,16 +29,15 @@
                     <thead>
                     <tr>
                         <th scope="col" style="width: 3%">#</th>
-                        <th scope="col" style="width: 10%">@sortablelink('created_at','Date')</th>
-                        <th scope="col" style="width: 27%">@sortablelink('fullname','Customer Name')</th>
-                        <th scope="col" style="width: 23%">@sortablelink('email','Email')</th>
-                        <th scope="col" style="width: 11%">@sortablelink('phone_no','Handphone No')</th>
-                        <th scope="col" style="width: 13%">@sortablelink('package','Package')</th>
-                        <th scope="col" style="width: 13%">@sortablelink('status','Status')</th>
+                        <th scope="col" style="width: 20%">@sortablelink('title','Title')</th>
+                        <th scope="col" style="width: 10%">@sortablelink('content_type','Content Type')</th>
+                        <th scope="col" style="width: 41%">@sortablelink('content_body','Content Body')</th>
+                        <th scope="col" style="width: 13%">@sortablelink('expired_at','Expired Date')</th>
+                        <th scope="col" style="width: 13%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($cvs as $key => $cv)
+                    @foreach ($announcements as $key => $announcement)
                         <tr>
                             <td scope="row">
                                 @if(!empty(\Request::get('perPage')) && !empty(\Request::get('page')))
@@ -48,27 +47,22 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $cv->created_at->format('d M Y') }}
+                                {{ $announcement->title }}
                             </td>
                             <td>
-                                {{ $cv->fullname }}
+                                {{ $announcement->content_type }}
                             </td>
                             <td>
-                                {{ $cv->email }}
-                            </td>
-                            <td>
-                                {{ $cv->phone_no }}
-                            </td>
-                            <td>
-                                {{ $cv->package }}
-                            </td>
-                            <td>
-                                @if($cv->status == 0) Not Upload
-                                @elseif($cv->status == 1) Not Pickup
-                                @elseif($cv->status == 2) On Progress
-                                @elseif($cv->status == 3) Finish
+                                @if($announcement->content_type == 'text')
+                                    {!! $announcement->content_body !!}
+                                @else
+                                    <img src="{{ asset('images/announcement/' . $announcement->content_body) }}" alt="" width="400px">
                                 @endif
                             </td>
+                            <td>
+                                {{ $announcement->expired_at->format('d M Y') }}
+                            </td>
+                            <td></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -91,12 +85,12 @@
                     </form>
                 </div>
                 <div class="float-right">
-                    {{ $cvs->appends(\Request::except('page'))->render() }}
+                    {{ $announcements->appends(\Request::except('page'))->render() }}
                 </div>
             </div>
         </div>
     </div>
-
+    
     <form id="form-delete" method="post">
         <input type="hidden" name="_method"/>
         <input type="hidden" name="_token">

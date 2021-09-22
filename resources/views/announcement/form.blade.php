@@ -40,7 +40,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row" id="image-section" @if (\Request::old('content_type') == 'text') style="display: none" @endif>
+                                <div class="form-group row" id="image-section" @if (\Request::old('content_type') == null || \Request::old('content_type') == 'text') style="display: none" @endif>
                                     <label class="col-md-2 col-form-label" for="department_id">Content</label>
                                     <div class="col-md-7">
                                         <div @error('content_image') style="border: 1px solid #e55353" @enderror>
@@ -53,8 +53,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-2 col-form-label" for="expired_at">Expired At</label>
                                     <div class="col-md-7">
-                                        <input id="phone_no" type="date" class="form-control @error('expired_at') is-invalid @enderror" name="expired_at"
-                                               value="{{ \Request::old('expired_at', isset($announcement) ? $announcement->expired_at : null) }}">
+                                        <input id="expired_at" type="text" class="form-control @error('expired_at') is-invalid @enderror" name="expired_at"
+                                               value="{{ \Request::old('expired_at', isset($announcement) ? $announcement->expired_at : \Carbon\Carbon::now()->addDay()->format('d-m-Y')) }}">
                                     </div>
                                 </div>
                             </div>
@@ -92,6 +92,9 @@
                 branding: false,
                 height: 500,
                 menubar: false
+            });
+            $('#expired_at').Zebra_DatePicker({
+                format: 'd-m-Y'
             });
         })
     </script>

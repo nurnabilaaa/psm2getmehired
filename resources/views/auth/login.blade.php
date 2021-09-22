@@ -11,8 +11,12 @@
                                 <ul id="lightSlider">
                                     @foreach($announcements as $announcement)
                                         <li style="padding: 10px;">
-                                            <h3>{{ $announcement->title }}</h3>
-                                            <p>{{ $announcement->content }}</p>
+                                            @if($announcement->content_type == 'text')
+                                                <h3>{{ $announcement->title }}</h3>
+                                                <p>{!! $announcement->content_body !!}</p>
+                                            @else
+                                                <img src="{{ asset('images/announcement/' . $announcement->content_body) }}" alt="" width="400px">
+                                            @endif
                                         </li>
                                     @endforeach
                                 </ul>

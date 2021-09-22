@@ -36,6 +36,7 @@
     <link href="{{ asset('css/free-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery.toast.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/zebra_datepicker.min.css') }}" rel="stylesheet">
     @yield("page-css")
 </head>
 
@@ -260,6 +261,7 @@
 <script src="{{ asset('js/jquery.toast.min.js') }}"></script>
 <script src="{{ asset('js/lightslider.min.js') }}"></script>
 <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+<script src="{{ asset('js/zebra_datepicker.min.js') }}"></script>
 <!--[if IE]><!-->
 <script src="{{ asset('js/svgxuse.min.js') }}"></script>
 <!--<![endif]-->
