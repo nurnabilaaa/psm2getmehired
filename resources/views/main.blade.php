@@ -32,6 +32,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/cropper.min.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/lightslider.min.css') }}">
     <link href="{{ asset('css/free-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery.toast.min.css') }}" rel="stylesheet">
@@ -64,6 +65,16 @@
                         <use xlink:href="{{ asset('icons/free.svg#cil-user') }}"></use>
                     </svg>
                     Admin
+                </a>
+            </li>
+        @endif
+        @if (\Laratrust::hasRole('admin'))
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'announcement') echo 'c-active' @endphp" href="{{ url('announcement') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-voice-over-record') }}"></use>
+                    </svg>
+                    Announcement
                 </a>
             </li>
         @endif
@@ -247,6 +258,8 @@
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/jquery.toast.min.js') }}"></script>
+<script src="{{ asset('js/lightslider.min.js') }}"></script>
+<script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 <!--[if IE]><!-->
 <script src="{{ asset('js/svgxuse.min.js') }}"></script>
 <!--<![endif]-->
@@ -254,16 +267,16 @@
 
 @if ($errors->any())
     <?php
-    $a = '';
+    $a = [];
     foreach ($errors->all() as $error) {
-        $a = $a . $error . '\n';
+        array_push($a, $error);
     }
     ?>
     <script type="text/javascript">
         $(document).ready(function () {
             $.toast({
                 heading: 'Success',
-                text: '{{ $a }}',
+                text: {!! json_encode($a) !!},
                 position: 'top-center',
                 stack: false,
                 showHideTransition: 'slide',

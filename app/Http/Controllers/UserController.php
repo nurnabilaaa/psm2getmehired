@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libs\ToyyibPay;
 use App\Mail\LostPassword;
 use App\Models;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
@@ -178,8 +179,9 @@ class UserController extends Controller
 //                    $paymentMsg    = 'Payment failed. Try to resubmit a payment after login. Please activate your account first';
 //                }
             }
+            $announcements = Models\Announcement::where('expired_at', '>=', date('Y-m-d'))->get();
 
-            return view('auth.login', /*['paymentStatus' => $paymentStatus, 'paymentMsg' => $paymentMsg]*/);
+            return view('auth.login', ['announcements' => $announcements] /*['paymentStatus' => $paymentStatus, 'paymentMsg' => $paymentMsg]*/);
         } else {
             $input = request()->all();
             $user  = Models\User::where('email', '=', $input['email'])->first();
@@ -304,6 +306,11 @@ class UserController extends Controller
         ];
 
         return view('user.form', $data);
+    }
+
+    public function store(Request $request)
+    {
+        //
     }
 
     public function edit($for, $id)

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\CurriculumVitaeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::match(['get', 'post'], 'password/reset/{token}', [UserController::class, 
 Route::group(array('middleware' => 'auth'), function () {
     Route::any("password", [UserController::class, 'changePassword']);
     Route::get("profile", [UserController::class, 'profile']);
+    Route::resource('announcement', AnnouncementController::class);
     Route::post('curriculum-vitae/upload/{id}', [CurriculumVitaeController::class, 'uploadCV']);
     Route::get('curriculum-vitae/pickup/{id}', [CurriculumVitaeController::class, 'pickupCV']);
     Route::post('curriculum-vitae/finish/{id}', [CurriculumVitaeController::class, 'finishCV']);

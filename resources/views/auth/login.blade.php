@@ -6,7 +6,20 @@
             <div class="col-5">
                 <div class="py-5 text-white d-md-down-none">
                     <div class="text-center">
-                        <img src="{{ asset('images/g14.jpg') }}" style="width: 450px;margin-right: 20px;border-radius: 40px;"/>
+                        @if($announcements->count() > 0)
+                            <div style="width: 450px;margin-right: 20px;border-radius: 10px;background-color: #36c3c36b;color: black;padding: 10px">
+                                <ul id="lightSlider">
+                                    @foreach($announcements as $announcement)
+                                        <li style="padding: 10px;">
+                                            <h3>{{ $announcement->title }}</h3>
+                                            <p>{{ $announcement->content }}</p>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <img src="{{ asset('images/g14.jpg') }}" style="width: 450px;margin-right: 20px;border-radius: 40px;"/>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -39,11 +52,11 @@
                                     {{ e(Session::get('success')) }}
                                 </div>
                             @endif
-{{--                            @if ($paymentMsg != null)--}}
-{{--                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">--}}
-{{--                                    {{ $paymentMsg }}--}}
-{{--                                </div>--}}
-{{--                            @endif--}}
+                            {{--                            @if ($paymentMsg != null)--}}
+                            {{--                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">--}}
+                            {{--                                    {{ $paymentMsg }}--}}
+                            {{--                                </div>--}}
+                            {{--                            @endif--}}
                         </div>
                     </div>
                     <div class="row">
@@ -110,3 +123,15 @@
         </div>
     </div>
 @stop
+
+@section('page-script')
+    <script>
+        $(document).ready(function () {
+            $("#lightSlider").lightSlider({
+                adaptiveHeight: true,
+                item: 1,
+                controls: false
+            });
+        });
+    </script>
+@append

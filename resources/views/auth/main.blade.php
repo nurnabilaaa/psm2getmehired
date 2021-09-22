@@ -30,6 +30,7 @@
     <meta name="theme-color" content="#ffffff">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('css/lightslider.min.css') }}">
 </head>
 <body class="c-app flex-row align-items-center">
 <div class="container">
@@ -59,11 +60,13 @@
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
+<script src="{{ asset('js/lightslider.min.js') }}"></script>
 <!--[if IE]><!-->
 <script src="{{ asset('js/svgxuse.min.js') }}"></script>
 <!--<![endif]-->
 <script>
     if (window.module) module = window.module;
 </script>
+@yield("page-script")
 </body>
 </html>

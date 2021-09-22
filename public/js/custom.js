@@ -2,8 +2,10 @@ jQuery(function ($) {
     var baseURL = window.location.protocol + "//" + window.location.host;
     var triggerCroppie = false;
 
-    const actualBtn = document.getElementById('cv');
-
+    let actualBtn = document.getElementById('cv');
+    if (actualBtn === null) {
+        actualBtn = document.getElementById('content_image');
+    }
     const fileChosen = document.getElementById('file-chosen');
 
     if (actualBtn != null) {
