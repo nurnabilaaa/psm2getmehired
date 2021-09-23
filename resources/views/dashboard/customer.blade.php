@@ -3,6 +3,11 @@
 @section("content")
     <div class="row">
         <div class="col-md-12">
+            @if ($paymentStatus != null)
+                <div class="alert @if ($paymentStatus == 'success') alert-success @elseif ($paymentStatus == 'pending') alert-warning @else alert-danger @endif">
+                    @if ($paymentStatus == 'success') Thanks for your payment. @elseif ($paymentStatus == 'pending') Payment pending. @else Error on processing your payment @endif
+                </div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     List of Curriculum Vitae
@@ -53,10 +58,21 @@
                                     {{ $cv->price }}
                                 </td>
                                 <td>
-                                    @if($cv->is_paid == 1) Paid @else Unpaid @endif
+                                    @if($cv->is_paid == 2)
+                                        <span class="alert alert-warning" style="padding: 5px 10px">Payment Pending</span>
+                                    @elseif($cv->is_paid == 1)
+                                        <span class="alert alert-success" style="padding: 5px 10px">Paid</span>
+                                        @if (env('TOYYIBPAY_DEV') == 'yes')
+                                            <a href="{{ 'https://dev.toyyibpay.com/' . $cv->bill_code }}" target="_blank">Receipt</a>
+                                        @else
+                                            <a href="{{ 'https://toyyibpay.com/' . $cv->bill_code }}" target="_blank">Receipt</a>
+                                        @endif
+                                    @elseif($cv->is_paid == 0 || $cv->is_paid == 3)
+                                        <span class="alert alert-danger" style="padding: 5px 10px">Unpaid</span>
+                                    @endif
                                 </td>
-                                <td>
-                                    @if($cv->is_paid == 0)
+                                <td @if($cv->is_paid == 1 && $cv->status == 0) style="padding: 0px" @endif>
+                                    @if($cv->is_paid == 0 || $cv->is_paid == 3)
                                         @if (env('TOYYIBPAY_DEV') == 'yes')
                                             <a href="{{ 'https://dev.toyyibpay.com/' . $cv->bill_code }}" class="btn btn-primary btn-sm" target="_blank">Pay</a>
                                         @else

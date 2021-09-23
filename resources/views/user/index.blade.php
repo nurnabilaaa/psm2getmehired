@@ -17,11 +17,23 @@
                         Add Admin
                     </a>
                 @endif
-                <button class="btn btn-primary btn-sm grid-btn-excel" type="button" style="margin-right: 4px;">
-                    <svg class="c-icon">
-                        <use xlink:href="{{ asset('icons/free.svg#cil-cloud-download') }}"></use>
-                    </svg>
-                </button>
+                @if($for == 'consultant')
+                    <a class="btn btn-primary btn-sm" href="{{ url('user/create/consultant') }}" style="margin-right: 4px;padding-top: 5px">
+                        Add Consultant
+                    </a>
+                @endif
+                    @if($for == 'customer')
+                        <a class="btn btn-primary btn-sm" href="{{ url('user/create/customer') }}" style="margin-right: 4px;padding-top: 5px">
+                            Add Customer
+                        </a>
+                    @endif
+                @if($for == 'customer')
+                    <button class="btn btn-primary btn-sm grid-btn-excel" type="button" style="margin-right: 4px;">
+                        <svg class="c-icon">
+                            <use xlink:href="{{ asset('icons/free.svg#cil-cloud-download') }}"></use>
+                        </svg>
+                    </button>
+                @endif
             </div>
         </div>
         <div class="card-body">
@@ -82,7 +94,7 @@
                                     <a href="{{ url('user/edit/' . $for . '/' . $user->id) }}" class="mr-1">
                                         Edit
                                     </a>
-                                    <a href="javascript:void(0)" data-id="{{ $user->id }}" class="text-danger delete">
+                                    <a href="javascript:void(0)" data-id="{{ $user->id }}" data-for="{{ $for }}" class="text-danger delete">
                                         Delete
                                     </a>
                                 </div>
@@ -130,6 +142,7 @@
 
             $('.delete').on('click', function () {
                 let id = $(this).attr('data-id');
+                let fr = $(this).attr('data-for');
                 swal({
                     title: 'Are you sure?',
                     text: "This record will be deleted!",
@@ -143,7 +156,7 @@
                     if (willDo) {
                         $('input[name="_token"]').val($('meta[name="csrf-token"]').attr('content'));
                         $('input[name="_method"]').val('DELETE');
-                        $('#form-delete').attr('action', '{{ \URL::to('invoice') }}/' + id);
+                        $('#form-delete').attr('action', '{{ \URL::to('user/delete') }}/' + fr + '/' + id);
                         $('#form-delete').submit();
                     }
                 });

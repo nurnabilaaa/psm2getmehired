@@ -5,6 +5,7 @@
             <form method="POST" action="{{  isset($announcement) ? route('announcement.update', $announcement->id) : route('announcement.store') }}" id="form-announcement"
                   enctype="multipart/form-data" novalidate>
                 @csrf
+                @if (isset($announcement)) @method('PUT') @endif
                 <div class="card card-primary">
                     <div class="card-header">
                         @if (isset($announcement)) Update @else Add @endif
@@ -28,19 +29,19 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" id="text-section" @if (\Request::old('content_type') == 'image') style="display: none" @endif>
+                                <div class="form-group row" id="text-section" @if (\Request::old('content_type') == 'image' || isset($announcement) && $announcement->content_type == 'image') style="display: none" @endif>
                                     <label class="col-md-2 col-form-label" for="content_text">Content</label>
                                     <div class="col-md-7">
                                         <div @error('content_text') style="border: 1px solid #e55353" @enderror>
                                         <textarea id="content_text" name="content_text">
                                              @if(isset($announcement) && $announcement->content_type == 'text')
-                                                {{ \Request::old('content', isset($announcement) ? $announcement->content : null) }}
+                                                {{ \Request::old('content', isset($announcement) ? $announcement->content_body : null) }}
                                             @endif
                                         </textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row" id="image-section" @if (\Request::old('content_type') == null || \Request::old('content_type') == 'text') style="display: none" @endif>
+                                <div class="form-group row" id="image-section" @if (\Request::old('content_type') == null && isset($announcement) && $announcement->content_type == 'text') style="display: none" @endif>
                                     <label class="col-md-2 col-form-label" for="department_id">Content</label>
                                     <div class="col-md-7">
                                         <div @error('content_image') style="border: 1px solid #e55353" @enderror>
@@ -52,9 +53,9 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-2 col-form-label" for="expired_at">Expired At</label>
-                                    <div class="col-md-7">
+                                    <div class="col-md-2">
                                         <input id="expired_at" type="text" class="form-control @error('expired_at') is-invalid @enderror" name="expired_at"
-                                               value="{{ \Request::old('expired_at', isset($announcement) ? $announcement->expired_at : \Carbon\Carbon::now()->addDay()->format('d-m-Y')) }}">
+                                               value="{{ \Request::old('expired_at', isset($announcement) ? $announcement->expired_at->format('d-m-Y') : \Carbon\Carbon::now()->addDay()->format('d-m-Y')) }}">
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +92,9 @@
                 selector: '#content_text',
                 branding: false,
                 height: 500,
-                menubar: false
+                menubar: false,
+                plugins: 'lists',
+                toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l ink image | print preview media fullpage | forecolor backcolor emoticons'
             });
             $('#expired_at').Zebra_DatePicker({
                 format: 'd-m-Y'

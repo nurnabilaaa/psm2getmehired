@@ -61,7 +61,7 @@
         </li>
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'admin') echo 'c-active' @endphp" href="{{ url('user/admin') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'admin') echo 'c-active' @endphp" href="{{ url('user/index/admin') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-user') }}"></use>
                     </svg>
@@ -71,17 +71,7 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'announcement') echo 'c-active' @endphp" href="{{ url('announcement') }}">
-                    <svg class="c-sidebar-nav-icon">
-                        <use xlink:href="{{ asset('icons/free.svg#cil-voice-over-record') }}"></use>
-                    </svg>
-                    Announcement
-                </a>
-            </li>
-        @endif
-        @if (\Laratrust::hasRole('admin'))
-            <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'consultant') echo 'c-active' @endphp" href="{{ url('user/consultant') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'consultant') echo 'c-active' @endphp" href="{{ url('user/index/consultant') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-contact') }}"></use>
                     </svg>
@@ -91,7 +81,7 @@
         @endif
         @if (\Laratrust::hasRole('admin'))
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'customer') echo 'c-active' @endphp" href="{{ url('user/customer') }}">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'customer') echo 'c-active' @endphp" href="{{ url('user/index/customer') }}">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="{{ asset('icons/free.svg#cil-people') }}"></use>
                     </svg>
@@ -106,6 +96,16 @@
                         <use xlink:href="{{ asset('icons/free.svg#cil-description') }}"></use>
                     </svg>
                     Curriculum Vitae
+                </a>
+            </li>
+        @endif
+        @if (\Laratrust::hasRole('admin'))
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link @php if($menu['menu'] == 'announcement') echo 'c-active' @endphp" href="{{ url('announcement') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="{{ asset('icons/free.svg#cil-voice-over-record') }}"></use>
+                    </svg>
+                    Announcement
                 </a>
             </li>
         @endif
@@ -188,6 +188,7 @@
             <ul class="c-header-nav ml-auto">
                 <li class="c-header-nav-item dropdown">
                     <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div style="color: #000;margin-top: 8px;margin-right: 10px;">{{ ucwords(strtolower(Auth::user()->fullname)) }}</div>
                         <div class="c-avatar">
                             @if (\Auth::user()->avatar == null)
                                 <img class="c-avatar-img" src="{{ asset('images/profile/no-picture.png') }}">

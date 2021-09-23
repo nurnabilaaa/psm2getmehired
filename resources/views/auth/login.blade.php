@@ -13,7 +13,7 @@
                                         <li style="padding: 10px;">
                                             @if($announcement->content_type == 'text')
                                                 <h3>{{ $announcement->title }}</h3>
-                                                <p>{!! $announcement->content_body !!}</p>
+                                                <p style="text-align: left">{!! $announcement->content_body !!}</p>
                                             @else
                                                 <img src="{{ asset('images/announcement/' . $announcement->content_body) }}" alt="" width="400px">
                                             @endif
@@ -56,11 +56,11 @@
                                     {{ e(Session::get('success')) }}
                                 </div>
                             @endif
-                            {{--                            @if ($paymentMsg != null)--}}
-                            {{--                                <div class="alert @if($paymentStatus == 'success') alert-success @else alert-danger @endif pl-2 pt-1 pb-1">--}}
-                            {{--                                    {{ $paymentMsg }}--}}
-                            {{--                                </div>--}}
-                            {{--                            @endif--}}
+                            @if ($paymentMsg != null)
+                                <div class="alert @if($paymentStatus == 'success') alert-success @elseif($paymentStatus == 'pending') alert-warning @else alert-danger @endif pl-2 pt-1 pb-1">
+                                    {{ $paymentMsg }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="row">

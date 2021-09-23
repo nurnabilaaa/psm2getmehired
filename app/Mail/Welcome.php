@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Activation extends Mailable
+class Welcome extends Mailable
 {
 
     use Queueable, SerializesModels;
@@ -34,8 +34,8 @@ class Activation extends Mailable
         $mailFromName  = env('MAIL_FROM_NAME');
 
         return $this->from($mailFromEmail, $mailFromName)
-                    ->subject('[GetMe Hired] Activate Your Account')
-                    ->view('email.user_activation')
+                    ->subject('[GetMe Hired] Getting Started With GetMe Hired')
+                    ->view('email.welcome')
                     ->with([
                                'name' => $this->data['name'],
                                'url' => $this->data['url']

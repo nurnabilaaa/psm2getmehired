@@ -147,7 +147,6 @@ class ToyyibPay
             'billPayorInfo'           => 0, //If you want to create open bill without require payer information, set it to 0. If you need payer information, set it to 1
             'billAmount'              => $this->getAmount() * 100,
             'billReturnUrl'           => $this->getReturnUrl(),
-            'billCallbackUrl'         => url('toyyibpay-callback'),
             'billExternalReferenceNo' => '',
             'billTo'                  => $this->getBillTo(), // If you intend to provide the bill to specific person, you may fill the person nam in this field. If not, please leave it blank.
             'billEmail'               => $this->getBillEmail(), //Provide your customer email here

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Libs\ToyyibPay;
+use App\Mail\Activation;
 use App\Mail\LostPassword;
+use App\Mail\Welcome;
 use App\Models;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
@@ -47,7 +48,7 @@ class UserController extends Controller
         } else {
             request()->validate([
                                     'fullname' => 'required',
-                                    'email'    => 'required:email',
+                                    'email'    => 'required|email',
                                     'phone_no' => 'required',
                                     'package'  => 'required',
                                     'password' => 'required|confirmed|min:6'
@@ -66,7 +67,7 @@ class UserController extends Controller
             $user->phone_no = str_replace('+6', '', $user->phone_no);
             $user->phone_no = str_replace('+', '', $user->phone_no);
             $user->phone_no = str_replace(' ', '', $user->phone_no);
-            $user->enable   = 0;
+            $user->enable   = 1;
             $user->save();
 
             $vitae              = new Models\CurriculumVitae();
@@ -84,6 +85,12 @@ class UserController extends Controller
             $adminRole = Models\Role::where('name', 'customer')->first();
             $user->attachRole($adminRole);
 
+            \Mail::to($user->email)
+                 ->queue(new Welcome([
+                                         'name' => strtoupper($user->fullname),
+                                         'url'  => \URL::to('/')
+                                     ]));
+
             return redirect()->to('pay/' . $user->id);
         }
     }
@@ -95,7 +102,7 @@ class UserController extends Controller
         } else {
             request()->validate([
                                     'fullname' => 'required',
-                                    'email'    => 'required:email',
+                                    'email'    => 'required|email',
                                     'phone_no' => 'required',
                                     'cv'       => 'required',
                                     'password' => 'required|confirmed|min:6'
@@ -155,33 +162,33 @@ class UserController extends Controller
         }
     }
 
-    public function toyyibpayCallback()
-    {
-        $vitae          = Models\CurriculumVitae::where('bill_code', request()->get('billcode'))->get()->first();
-        $vitae->is_paid = request()->get('status');
-        $vitae->save();
-    }
-
     public function login()
     {
         if (request()->isMethod('get')) {
+            $paymentMsg    = null;
+            $paymentStatus = null;
             if (request()->get('billcode') != null && request()->get('status_id') != null) {
-                $paymentStatus  = 'success';
-                $paymentMsg     = null;
                 $vitae          = Models\CurriculumVitae::where('bill_code', request()->get('billcode'))->get()->first();
                 $vitae->is_paid = request()->get('status_id');
                 $vitae->save();
-//                if (request()->get('status_id') == 1) {
-//                    $paymentMsg = 'Thanks for your payment, please login after activation';
-//                }
-//                elseif (request()->get('status_id') == 3) {
-//                    $paymentStatus = 'failed';
-//                    $paymentMsg    = 'Payment failed. Try to resubmit a payment after login. Please activate your account first';
-//                }
-            }
-            $announcements = Models\Announcement::where('expired_at', '>=', date('Y-m-d'))->get();
+                if (request()->get('status_id') == 1) {
+                    $paymentStatus = 'success';
+                    $paymentMsg    = 'Thanks for your payment. Please login to submit your CV';
+                } elseif (request()->get('status_id') == 3) {
+                    $paymentStatus = 'failed';
+                    $paymentMsg    = 'Payment failed. Try to resubmit a payment after login';
+                } else {
+                    $paymentStatus = 'pending';
+                    $paymentMsg    = 'Payment pending.';
+                }
 
-            return view('auth.login', ['announcements' => $announcements] /*['paymentStatus' => $paymentStatus, 'paymentMsg' => $paymentMsg]*/);
+                if (Auth::check()) {
+                    return redirect()->to('/')->with('paymentStatus', $paymentStatus);
+                }
+            }
+            $announcements = Models\Announcement::where('expired_at', '>=', date('Y-m-d'))->orderBy('expired_at')->get();
+
+            return view('auth.login', ['announcements' => $announcements, 'paymentStatus' => $paymentStatus, 'paymentMsg' => $paymentMsg]);
         } else {
             $input = request()->all();
             $user  = Models\User::where('email', '=', $input['email'])->first();
@@ -254,19 +261,6 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        if (request()->get('billcode') != null && request()->get('status_id') != null) {
-            $vitae          = Models\CurriculumVitae::where('bill_code', request()->get('billcode'))->get()->first();
-            $vitae->is_paid = request()->get('status_id');
-            $vitae->save();
-//                if (request()->get('status_id') == 1) {
-//                    $paymentMsg = 'Thanks for your payment, please login after activation';
-//                }
-//                elseif (request()->get('status_id') == 3) {
-//                    $paymentStatus = 'failed';
-//                    $paymentMsg    = 'Payment failed. Try to resubmit a payment after login. Please activate your account first';
-//                }
-        }
-
         $data = [
             'menu' => ['menu' => 'Home', 'subMenu' => ''],
         ];
@@ -286,15 +280,63 @@ class UserController extends Controller
             $data['onWorkingCvs'] = Models\VWCurriculumVitae::where('status', 2)
                                                             ->where('consultant_id', auth()->user()->id)
                                                             ->orderBy('created_at')->get();
-            $data['finishCvs'] = Models\VWCurriculumVitae::where('status', 3)
+            $data['finishCvs']    = Models\VWCurriculumVitae::where('status', 3)
                                                             ->where('consultant_id', auth()->user()->id)
                                                             ->orderBy('created_at')->get();
 
             return view('dashboard.consultant', $data);
-        } else {
-            $data['cvs'] = Models\VWCurriculumVitae::where('customer_id', Auth::user()->id)->get();
+        } elseif (Auth::user()->hasRole('customer')) {
+            $paymentStatus = null;
+            if (session()->get('paymentStatus') != null) {
+                $paymentStatus = session()->get('paymentStatus');
+            } elseif (request()->get('status_id') !== null) {
+                $vitae          = Models\CurriculumVitae::where('bill_code', request()->get('billcode'))->get()->first();
+                $vitae->is_paid = request()->get('status_id');
+                $vitae->save();
+                if (request()->get('status_id') == 1) {
+                    $paymentStatus = 'success';
+                } elseif (request()->get('status_id') == 3) {
+                    $paymentStatus = 'failed';
+                } else {
+                    $paymentStatus = 'pending';
+                }
+            }
+            $data['cvs']        = Models\VWCurriculumVitae::where('customer_id', Auth::user()->id)->get();
+            $data['paymentStatus'] = $paymentStatus;
 
             return view('dashboard.customer', $data);
+        }
+    }
+
+    public function activation($id)
+    {
+        if (\Request::isMethod('get')) {
+            $user = Models\User::find($id);
+            $data = [
+                'user' => $user
+            ];
+
+            if ($user == null) {
+                return redirect()->to('login')->with('error', 'User not found');
+            } elseif ($user->password != null) {
+                return redirect()->to('login')->with('error', 'User already active');
+            }
+
+            return view('auth.activate', $data);
+        } else {
+            request()->validate([
+                                    'password' => 'required|confirmed|min:6'
+                                ]);
+
+            $user           = Models\User::find($id);
+            $user->password = \Hash::make(request()->input('password'));
+            $user->enable   = 1;
+            if ($user->hasRole('consultant')) {
+                $user->consultant_status = 1;
+            }
+            $user->save();
+
+            return redirect()->to('login')->with('success', 'Your account has been activate. Please login');
         }
     }
 
@@ -308,9 +350,50 @@ class UserController extends Controller
         return view('user.form', $data);
     }
 
-    public function store(Request $request)
+    public function store($for)
     {
-        //
+        $check = Models\User::where('email', request()->get('email'))->get();
+        if ($check->count() > 0) {
+            return redirect()->back()->withInput()->with('error', 'That email has been used. Try another email, or update existing one');
+        }
+
+        $user           = new Models\User();
+        $user->email    = request()->get('email');
+        $user->fullname = strtoupper(request()->get('fullname'));
+        $user->phone_no = request()->get('phone_no');
+        $user->phone_no = str_replace('-', '', $user->phone_no);
+        $user->phone_no = str_replace('+6', '', $user->phone_no);
+        $user->phone_no = str_replace('+', '', $user->phone_no);
+        $user->phone_no = str_replace(' ', '', $user->phone_no);
+        if ($for == 'consultant') {
+            $user->consultant_status = 1;
+        }
+        $user->enable = 0;
+        $user->save();
+        if ($for == 'admin') {
+            $adminRole = Models\Role::where('name', 'admin')->first();
+            $user->attachRole($adminRole);
+        } elseif ($for == 'consultant') {
+            $consultantRole = Models\Role::where('name', 'consultant')->first();
+            $user->attachRole($consultantRole);
+        } elseif ($for == 'customer') {
+            $customerRole = Models\Role::where('name', 'customer')->first();
+            $user->attachRole($customerRole);
+        }
+
+        \Mail::to($user->email)
+             ->queue(new Activation([
+                                        'name' => strtoupper($user->fullname),
+                                        'url'  => \URL::to('activate/' . $user->id)
+                                    ]));
+
+        if ($for == 'admin') {
+            return redirect()->to('user/index/admin')->with('success', 'Admin has been created');
+        } elseif ($for == 'consultant') {
+            return redirect()->to('user/index/consultant')->with('success', 'Consultant has been created');
+        } elseif ($for == 'customer') {
+            return redirect()->to('user/index/customer')->with('success', 'Customer has been created');
+        }
     }
 
     public function edit($for, $id)
@@ -344,17 +427,14 @@ class UserController extends Controller
 
         if ($for == 'consultant') {
             $user->consultant_status = request()->get('consultant_status');
-            $user->enable            = request()->get('enable');
-        } elseif ($for == 'customer') {
-            $user->enable            = request()->get('enable');
         }
-
+        $user->enable = request()->get('enable');
         $user->save();
 
         if ($for == 'profile') {
             return redirect()->to('profile')->with('success', 'Your profile has been updated');
         } else {
-            return redirect()->to('user/' . $for)->with('success', 'User has been updated');
+            return redirect()->to('user/index/' . $for)->with('success', 'User has been updated');
         }
     }
 
@@ -387,6 +467,48 @@ class UserController extends Controller
                 $user->save();
 
                 return redirect()->to('password')->with('success', 'Password has been change.');
+            }
+        }
+    }
+
+    public function destroy($for, $id)
+    {
+        $hasLink      = false;
+        $user         = Models\User::find($id);
+        $announcement = Models\Announcement::where('announce_by', $id)->get();
+        $hasLink      = $announcement->count() > 0;
+        if (!$hasLink) {
+            $cv      = Models\CurriculumVitae::where('customer_id', $id)->orWhere('consultant_id', $id)->get();
+            $hasLink = $cv->count() > 0;
+        }
+
+        if ($hasLink) {
+            $user->enable = 0;
+            $user->save();
+            if ($for == 'admin') {
+                return redirect()->to('user/index/admin')->with('success', 'Admin has relation with other data. DISABLE this admin');
+            } elseif ($for == 'consultant') {
+                return redirect()->to('user/index/consultant')->with('success', 'Consultant has relation with other data. DISABLE this admin');
+            } elseif ($for == 'customer') {
+                return redirect()->to('user/index/customer')->with('success', 'Customer has relation with other data. DISABLE this admin');
+            }
+        } else {
+            if ($user->hasRole('admin')) {
+                $user->detachRole('admin');
+            }
+            if ($user->hasRole('consultant')) {
+                $user->detachRole('consultant');
+            }
+            if ($user->hasRole('customer')) {
+                $user->detachRole('customer');
+            }
+            $user->delete();
+            if ($for == 'admin') {
+                return redirect()->to('user/index/admin')->with('success', 'Admin has been deleted');
+            } elseif ($for == 'consultant') {
+                return redirect()->to('user/index/consultant')->with('success', 'Consultant has been deleted');
+            } elseif ($for == 'customer') {
+                return redirect()->to('user/index/customer')->with('success', 'Customer has been deleted');
             }
         }
     }

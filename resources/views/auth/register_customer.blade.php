@@ -15,7 +15,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-12" style="width: 350px">
-                            <h2 class="text-center">Register as Customer</h2>
+                            <h2 class="text-center">Check My CV</h2>
                             <p class="text-muted text-center">Please fill in all field and submit</p>
                             @if ($errors->any())
                                 <div class="alert alert-danger pl-1 pt-1 pb-1">
@@ -150,7 +150,7 @@
             <div class="col-2"></div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-info modal-lg" role="document">
             <div class="modal-content">

@@ -17,11 +17,15 @@
 </head>
 
 <body>
-Mr/Mrs {{ strtoupper($name) }},
+<h2>Welcome to GetMe Hired.</h2>
+<br/>
+Hello Mr/Mrs {{ strtoupper($name) }},
+<br />
+<b>It's great to have you on board!</b>
 <br/><br/>
-Welcome to GetMe Hired.
+You’re on the way to creating a beautiful curriculum vitae, and we’ve got everything you’ll need.
 <br/><br/>
-Please click on link below to activate your account.
+Let's get started on how to "WOW" employees out there with your first CV.
 <br/><br/>
 <a href="{{ $url }}">{{ $url }}</a>
 <br/><br/>

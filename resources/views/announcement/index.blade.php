@@ -62,7 +62,16 @@
                             <td>
                                 {{ $announcement->expired_at->format('d M Y') }}
                             </td>
-                            <td></td>
+                            <td class="text-center">
+                                <div class="buttons">
+                                    <a href="{{ route('announcement.edit', $announcement->id) }}" class="mr-1">
+                                        Edit
+                                    </a>
+                                    <a href="javascript:void(0)" data-id="{{ $announcement->id }}" class="text-danger delete">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -90,7 +99,7 @@
             </div>
         </div>
     </div>
-    
+
     <form id="form-delete" method="post">
         <input type="hidden" name="_method"/>
         <input type="hidden" name="_token">
@@ -103,6 +112,27 @@
             $('#perPage').on('change', function () {
                 $('#sd').submit();
             });
+
+            $('.delete').on('click', function () {
+                let id = $(this).attr('data-id');
+                swal({
+                    title: 'Are you sure?',
+                    text: "This record will be deleted!",
+                    icon: 'warning',
+                    dangerMode: true,
+                    buttons: {
+                        confirm: {text: 'Yes', className: 'sweet-danger'},
+                        cancel: 'No'
+                    },
+                }).then((willDo) => {
+                    if (willDo) {
+                        $('input[name="_token"]').val($('meta[name="csrf-token"]').attr('content'));
+                        $('input[name="_method"]').val('DELETE');
+                        $('#form-delete').attr('action', '{{ \URL::to('announcement') }}/' + id);
+                        $('#form-delete').submit();
+                    }
+                });
+            })
         });
     </script>
 @append

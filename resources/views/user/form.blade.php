@@ -2,9 +2,8 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <form method="POST" action="{{  isset($user) ? url('user/update/' . $for . '/' . $user->id) : url('user/store') }}" id="form-doctor"
-                  enctype="multipart/form-data"
-                  novalidate>
+            <form method="POST" action="{{  isset($user) ? url('user/update/' . $for . '/' . $user->id) : url('user/store/' . $for) }}" id="form-user"
+                  enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="card card-primary">
                     <div class="card-header">
@@ -17,27 +16,24 @@
                                     <label class="col-md-2 col-form-label" for="fullname">Fullname</label>
                                     <div class="col-md-7">
                                         <input id="fullname" type="text" class="form-control @error('fullname') is-invalid @enderror" name="fullname"
-                                               value="{{ \Request::old('fullname', isset($user) ? $user->fullname : null) }}" autofocus placeholder="Your Name"
-                                               @if($for == 'consultant' || $for == 'customer') readonly @endif>
+                                               value="{{ \Request::old('fullname', isset($user) ? $user->fullname : null) }}" autofocus>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-2 col-form-label" for="identification_no">Email Address</label>
                                     <div class="col-md-7">
                                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                                               value="{{ \Request::old('email', isset($user) ? $user->email : null) }}"
-                                               placeholder="Email Address" @if($for == 'consultant' || $for == 'customer') readonly @endif>
+                                               value="{{ \Request::old('email', isset($user) ? $user->email : null) }}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-2 col-form-label" for="department_id">Handphone No</label>
                                     <div class="col-md-7">
                                         <input id="phone_no" type="text" class="form-control @error('phone_no') is-invalid @enderror" name="phone_no"
-                                               value="{{ \Request::old('phone_no', isset($user) ? $user->phone_no : null) }}"
-                                               placeholder="Handphone Number" @if($for == 'consultant' || $for == 'customer') readonly @endif>
+                                               value="{{ \Request::old('phone_no', isset($user) ? $user->phone_no : null) }}">
                                     </div>
                                 </div>
-                                @if($for == 'consultant')
+                                @if($for == 'customer')
                                     <div class="form-group row">
                                         <label class="col-md-2 col-form-label" for="department_id">Consultant Status</label>
                                         <div class="col-md-7">
@@ -75,25 +71,11 @@
                                         </div>
                                     </div>
                                 @endif
-                                @if (!isset($user))
-                                    <div class="form-group row">
-                                        <label class="col-md-2 col-form-label" for="work_no">Password</label>
-                                        <div class="col-md-7">
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-2 col-form-label" for="email">Repeat Password</label>
-                                        <div class="col-md-7">
-                                            <input type="password" class="form-control" name="password_confirmation" placeholder="Repeat Password">
-                                        </div>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="card-footer text-right">
-                        <a href="{{ url('user/' . $for) }}" class="btn btn-ghost-danger">Cancel</a>
+                        <a href="{{ url('user/index/' . $for) }}" class="btn btn-ghost-danger">Cancel</a>
                         <button type="submit" class="btn btn-sm btn-primary">
                             Save
                         </button>

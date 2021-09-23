@@ -31,7 +31,7 @@ class AnnouncementController extends Controller
                     $query->whereRaw('`title` LIKE "%' . $keyword . '%"
                     OR `content_type` LIKE "%' . $keyword . '%"
                     OR `content_body` LIKE "%' . $keyword . '%"
-                    OR `expired_at` LIKE "%' . $keyword . '%"
+                    OR DATE_FORMAT(`expired_at`, "%d %b %Y") LIKE "%' . $keyword . '%"
                     ');
                 }
             })->sortable(['expired_at' => 'desc'])->paginate($perPage);
@@ -101,56 +101,67 @@ class AnnouncementController extends Controller
 
     public function edit($id)
     {
-        //
+        $announcement = Models\Announcement::find($id);
+        $data = [
+            'menu' => ['menu' => 'announcement', 'subMenu' => ''],
+            'announcement' => $announcement
+        ];
+
+        return view('announcement.form', $data);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        if (request()->get('content_type') == 'text') {
+            request()->validate([
+                                    'title'        => 'required',
+                                    'content_type' => 'required',
+                                    'expired_at'   => 'required',
+                                    'content_text' => 'required',
+                                ]);
+        }
+        else {
+            request()->validate([
+                                    'title'         => 'required',
+                                    'content_type'  => 'required',
+                                    'expired_at'    => 'required',
+                                    'content_image' => 'required',
+                                ]);
+        }
+
+        $announcement               = Models\Announcement::find($id);
+        $announcement->title        = request()->get('title');
+        $announcement->content_type = request()->get('content_type');
+        $announcement->expired_at   = date('Y-m-d', strtotime(request()->get('expired_at')));
+
+        if (request()->get('content_type') == 'text') {
+            $announcement->content_body = request()->get('content_text');
+        }
+        else {
+            if (file_exists(public_path('images' . DIRECTORY_SEPARATOR . 'announcement' . DIRECTORY_SEPARATOR . $announcement->content_body))) {
+                unlink(public_path('images' . DIRECTORY_SEPARATOR . 'announcement' . DIRECTORY_SEPARATOR . $announcement->content_body));
+            }
+            $fileBase = request()->file('content_image');
+            $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
+            $fileBase->move(public_path('images' . DIRECTORY_SEPARATOR . 'announcement'), $newName);
+            $announcement->content_body = $newName;
+        }
+
+        $announcement->save();
+
+        return redirect()->to('announcement')->with('success', 'Announcement has been updated');
     }
 
     public function destroy($id)
     {
-        //
-    }
+        $announcement               = Models\Announcement::find($id);
+        if ($announcement->content_type == 'image') {
+            if (file_exists(public_path('images' . DIRECTORY_SEPARATOR . 'announcement' . DIRECTORY_SEPARATOR . $announcement->content_body))) {
+                unlink(public_path('images' . DIRECTORY_SEPARATOR . 'announcement' . DIRECTORY_SEPARATOR . $announcement->content_body));
+            }
+        }
+        $announcement->delete();
 
-    public function uploadCV($id)
-    {
-        $cv = Models\CurriculumVitae::find($id);
-
-        $fileBase = request()->file('cv');
-        $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
-        $fileBase->move(public_path('cv'), $newName);
-
-        $cv->cv_origin_filename = $newName;
-        $cv->status             = 1;
-        $cv->save();
-
-        return redirect()->back()->with('success', 'Your CV has been upload');
-    }
-
-    public function pickupCV($id)
-    {
-        $cv                = Models\CurriculumVitae::find($id);
-        $cv->status        = 2;
-        $cv->consultant_id = \Auth::user()->id;
-        $cv->save();
-
-        return redirect()->back()->with('success', 'CV has been pickup');
-    }
-
-    public function finishCV($id)
-    {
-        $cv = Models\CurriculumVitae::find($id);
-
-        $fileBase = request()->file('cv');
-        $newName  = Uuid::uuid4()->getHex() . '.' . $fileBase->getClientOriginalExtension();
-        $fileBase->move(public_path('cv'), $newName);
-
-        $cv->cv_modified_filename = $newName;
-        $cv->status               = 3;
-        $cv->save();
-
-        return redirect()->back()->with('success', 'Thanks for your contribution');
+        return redirect()->to('announcement')->with('success', 'Announcement has been deleted');
     }
 }

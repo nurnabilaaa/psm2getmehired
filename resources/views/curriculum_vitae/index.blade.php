@@ -29,7 +29,7 @@
                         <th scope="col" style="width: 23%">@sortablelink('email','Email')</th>
                         <th scope="col" style="width: 11%">@sortablelink('phone_no','Handphone No')</th>
                         <th scope="col" style="width: 13%">@sortablelink('package','Package')</th>
-                        <th scope="col" style="width: 13%">@sortablelink('status','Status')</th>
+                        <th scope="col" style="width: 13%;text-align: center">@sortablelink('status','Status')</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -58,10 +58,22 @@
                                 {{ $cv->package }}
                             </td>
                             <td>
-                                @if($cv->status == 0) Not Upload
-                                @elseif($cv->status == 1) Not Pickup
-                                @elseif($cv->status == 2) On Progress
-                                @elseif($cv->status == 3) Finish
+                                @if($cv->status == 0)
+                                    <div class="alert alert-info pl-2 pt-1 pb-1 text-center">
+                                        Not Upload
+                                    </div>
+                                @elseif($cv->status == 1)
+                                    <div class="alert alert-warning pl-2 pt-1 pb-1 text-center">
+                                        Not Pickup
+                                    </div>
+                                @elseif($cv->status == 2)
+                                    <div class="alert alert-secondary pl-2 pt-1 pb-1 text-center">
+                                        On Progress
+                                    </div>
+                                @elseif($cv->status == 3)
+                                    <div class="alert alert-success pl-2 pt-1 pb-1 text-center">
+                                        Finish
+                                    </div>
                                 @endif
                             </td>
                         </tr>
